@@ -1,0 +1,1842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#0e0e13">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Trotl — Spot. Earn. Dominate.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;background:#000;}
+body{font-family:'DM Sans',sans-serif;color:#e8e8ea;}
+:root{
+  --s0:#0e0e13;--s1:#181820;--s2:#1f1f28;--s3:#272731;--s4:#30303c;--s5:#3c3c4a;
+  --t0:#f0f0f2;--t1:#9898a6;--t2:#5a5a6a;--t3:#38383f;
+  --red:#e8001d;--red-d:#a80015;--red-lo:rgba(232,0,29,.13);
+  --gold:#f0b429;--gold-lo:rgba(240,180,41,.12);
+  --green:#1ed760;--grn-lo:rgba(30,215,96,.11);
+  --blue:#3d9eff;--blu-lo:rgba(61,158,255,.11);
+  --purple:#a87fff;--prp-lo:rgba(168,127,255,.11);
+  --orange:#ff6d00;--orn-lo:rgba(255,109,0,.11);
+  --teal:#00d4c8;
+}
+.light{
+  --s0:#f2f2f5;--s1:#ffffff;--s2:#ececf0;--s3:#e2e2e8;--s4:#d0d0d8;--s5:#bcbcc8;
+  --t0:#18181e;--t1:#5a5a70;--t2:#9898a8;--t3:#c0c0cc;
+}
+.shell{width:390px;height:844px;margin:auto;display:flex;flex-direction:column;background:var(--s0);overflow:hidden;position:relative;box-shadow:0 0 0 1px rgba(255,255,255,.06),0 40px 100px rgba(0,0,0,.85);}
+@media(min-height:860px){body{display:flex;align-items:center;justify-content:center;background:#06060a;}}
+@media(max-width:420px){html,body{overflow:auto;}.shell{width:100vw;height:100dvh;box-shadow:none;}}
+
+/* ONBOARDING */
+.onboard{position:absolute;inset:0;z-index:500;background:var(--s0);display:flex;flex-direction:column;overflow:hidden;}
+.ob-hidden{display:none!important;}
+.ob-step{flex:1;display:flex;flex-direction:column;opacity:0;transform:translateX(28px);transition:all .32s ease;pointer-events:none;position:absolute;inset:0;}
+.ob-step.ob-active{opacity:1;transform:none;pointer-events:all;position:relative;}
+.ob-step.ob-exit{opacity:0;transform:translateX(-28px);}
+.ob-hero{position:relative;overflow:hidden;flex-shrink:0;}
+.ob-hero img{width:100%;height:100%;object-fit:cover;display:block;}
+.ob-grad{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(14,14,19,.2) 30%,var(--s0) 100%);}
+.ob-logo-wrap{position:absolute;top:22px;left:0;right:0;text-align:center;}
+.ob-logo{font-family:'Rajdhani',sans-serif;font-size:34px;font-weight:700;letter-spacing:5px;color:#fff;text-shadow:0 2px 24px rgba(0,0,0,.6);}
+.ob-logo b{color:var(--red);}
+.ob-body{flex:1;padding:20px 24px 0;overflow-y:auto;}
+.ob-title{font-family:'Rajdhani',sans-serif;font-size:25px;font-weight:700;margin-bottom:6px;letter-spacing:.2px;}
+.ob-sub{font-size:13px;color:var(--t1);line-height:1.6;margin-bottom:22px;}
+.ob-input{width:100%;padding:14px 16px;background:var(--s2);border:1.5px solid var(--s4);border-radius:10px;color:var(--t0);font-family:'DM Sans',sans-serif;font-size:15px;outline:none;transition:border-color .2s;margin-bottom:16px;}
+.ob-input:focus{border-color:var(--red);}
+.ob-input::placeholder{color:var(--t2);}
+.ob-lbl{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--t2);margin-bottom:10px;font-family:'DM Mono',monospace;}
+.ob-countries{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:8px;}
+.ob-ctry{padding:7px 13px;background:var(--s2);border:1.5px solid var(--s4);border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;color:var(--t0);}
+.ob-ctry.sel{background:var(--red);border-color:var(--red);color:#fff;}
+.ob-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+.ob-chip{padding:12px 13px;background:var(--s2);border:1.5px solid var(--s4);border-radius:10px;cursor:pointer;transition:all .18s;display:flex;align-items:center;gap:9px;}
+.ob-chip.sel{border-color:var(--red);background:var(--red-lo);}
+.ob-chip-ico{font-size:18px;flex-shrink:0;}
+.ob-chip-label{font-size:13px;font-weight:500;color:var(--t0);}
+.ob-chip-sub{font-size:10px;color:var(--t1);margin-top:1px;}
+.ob-footer{padding:14px 24px 20px;flex-shrink:0;}
+.ob-dots{display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:12px;}
+.ob-dot{width:6px;height:6px;border-radius:50%;background:var(--s4);transition:all .2s;}
+.ob-dot.active{width:20px;border-radius:3px;background:var(--red);}
+.ob-btn{width:100%;padding:15px;background:var(--red);border:none;border-radius:10px;color:#fff;font-family:'Rajdhani',sans-serif;font-size:17px;font-weight:700;letter-spacing:2.5px;cursor:pointer;transition:all .18s;}
+.ob-btn:hover{filter:brightness(1.1);transform:translateY(-1px);}
+.ob-btn:disabled{opacity:.35;cursor:default;transform:none;}
+.stat-mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:4px;}
+.stat-mini{background:var(--s2);border:1px solid var(--s4);border-radius:10px;padding:13px;text-align:center;}
+.stat-mini-val{font-family:'DM Mono',monospace;font-size:22px;font-weight:500;line-height:1;}
+.stat-mini-lbl{font-size:10px;color:var(--t1);margin-top:3px;letter-spacing:1px;text-transform:uppercase;}
+
+/* TOPBAR */
+.topbar{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:12px 18px 11px;background:var(--s0);border-bottom:1px solid var(--s4);z-index:50;}
+.logo{font-family:'Rajdhani',sans-serif;font-size:24px;font-weight:700;letter-spacing:3px;color:var(--t0);}
+.logo b{color:var(--red);}
+.logo-sub{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--t3);font-family:'DM Mono',monospace;}
+.tb-r{display:flex;align-items:center;gap:7px;}
+.tb-ico{width:34px;height:34px;border-radius:50%;background:var(--s2);border:1px solid var(--s4);display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;transition:background .15s;}
+.tb-ico:hover{background:var(--s3);}
+.tb-ico svg{width:15px;height:15px;color:var(--t1);}
+.pip{position:absolute;top:6px;right:6px;width:6px;height:6px;border-radius:50%;background:var(--red);border:1.5px solid var(--s0);}
+.tb-avi{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--red),var(--red-d));display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:12px;font-weight:500;color:#fff;cursor:pointer;border:1.5px solid var(--s5);}
+
+/* SCREENS */
+.screens{flex:1;position:relative;overflow:hidden;}
+.screen{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity .22s ease,transform .22s ease;padding-bottom:16px;}
+.screen::-webkit-scrollbar{display:none;}
+.screen.active{opacity:1;pointer-events:all;transform:none;}
+
+/* BOTTOM NAV */
+.bnav{flex-shrink:0;display:flex;background:var(--s0);border-top:1px solid var(--s4);padding-bottom:env(safe-area-inset-bottom,0);z-index:50;}
+.nb{flex:1;padding:10px 4px 9px;background:none;border:none;border-top:2px solid transparent;color:var(--t2);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:10px;font-weight:500;letter-spacing:.3px;display:flex;flex-direction:column;align-items:center;gap:4px;transition:all .15s;}
+.nb svg{width:18px;height:18px;}
+.nb.active{color:var(--red);border-top-color:var(--red);}
+.nb-fab{flex:none;width:58px;position:relative;top:-10px;display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;cursor:pointer;padding:0;}
+.fab{width:52px;height:52px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 4px var(--red-lo),0 8px 24px rgba(232,0,29,.4);transition:all .2s;}
+.fab:hover{transform:scale(1.08);box-shadow:0 0 0 6px var(--red-lo),0 10px 32px rgba(232,0,29,.55);}
+.fab svg{width:22px;height:22px;color:#fff;}
+.fab-lbl{font-size:9px;font-weight:500;color:var(--t2);}
+
+/* SHARED */
+.ph{padding:16px 16px 0;}
+.rh{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px;}
+.rl{font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--t1);}
+.ra{font-size:11px;font-weight:500;color:var(--t2);background:none;border:none;cursor:pointer;transition:color .15s;}
+.ra:hover{color:var(--t0);}
+.card{background:var(--s1);border:1px solid var(--s4);border-radius:14px;}
+.pill{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:9px;font-weight:500;letter-spacing:1px;text-transform:uppercase;}
+.pc{background:rgba(136,136,136,.12);color:#888;border:1px solid rgba(136,136,136,.2);}
+.pu{background:var(--grn-lo);color:var(--green);border:1px solid rgba(30,215,96,.25);}
+.pr{background:var(--blu-lo);color:var(--blue);border:1px solid rgba(61,158,255,.25);}
+.pe{background:var(--prp-lo);color:var(--purple);border:1px solid rgba(168,127,255,.28);}
+.pl{background:var(--gold-lo);color:var(--gold);border:1px solid rgba(240,180,41,.28);}
+.pun{background:var(--red-lo);color:var(--red);border:1px solid rgba(232,0,29,.3);}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+@keyframes spin{to{transform:rotate(360deg);}}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+@keyframes scanline{from{top:0;}to{top:100%;}}
+@keyframes flashK{0%{opacity:0;}25%{opacity:.9;}70%{opacity:.85;}100%{opacity:0;}}
+@keyframes burst{0%{opacity:0;transform:translate(-50%,-50%) scale(.5);}30%{opacity:1;transform:translate(-50%,-50%) scale(1.08);}60%{transform:translate(-50%,-50%) scale(1);}80%{opacity:1;}100%{opacity:0;transform:translate(-50%,-70px);}}
+@keyframes toastIn{from{transform:translateX(110%);opacity:0;}to{transform:none;opacity:1;}}
+@keyframes toastOut{from{transform:none;opacity:1;}to{transform:translateX(110%);opacity:0;}}
+@keyframes scratchReveal{from{clip-path:inset(0 100% 0 0);}to{clip-path:inset(0 0% 0 0);}}
+@keyframes slideSheetUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+.a1{animation:fadeUp .32s ease both;}
+.a2{animation:fadeUp .32s .07s ease both;}
+.a3{animation:fadeUp .32s .14s ease both;}
+.a4{animation:fadeUp .32s .21s ease both;}
+.a5{animation:fadeUp .32s .28s ease both;}
+.live{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--green);margin-right:5px;animation:pulse 1.8s ease-in-out infinite;}
+
+/* HOME HERO */
+.ring-hero{margin:16px;background:var(--s1);border:1px solid var(--s4);border-radius:18px;overflow:hidden;}
+.hero-accent{height:3px;background:linear-gradient(90deg,var(--red),var(--orange),var(--gold));}
+.hero-body{padding:18px 20px 16px;}
+.hero-greeting{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--t2);font-family:'DM Mono',monospace;margin-bottom:2px;}
+.hero-name{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;margin-bottom:18px;}
+.hero-name span{color:var(--red);}
+.rings-row{display:flex;justify-content:space-around;margin-bottom:16px;}
+.ring-item{display:flex;flex-direction:column;align-items:center;gap:7px;}
+.ring-wrap{position:relative;width:76px;height:76px;}
+.ring-wrap svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg);}
+.ring-bg{fill:none;stroke:var(--s3);stroke-width:5;}
+.ring-fg{fill:none;stroke-width:5;stroke-linecap:round;}
+.ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.ring-val{font-family:'DM Mono',monospace;font-size:14px;font-weight:500;line-height:1;}
+.ring-unit{font-size:9px;color:var(--t2);margin-top:1px;letter-spacing:.5px;}
+.ring-lbl{font-size:10px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;}
+.ring-delta{font-size:9px;color:var(--t2);}
+.insight{background:var(--s2);border:1px solid var(--s5);border-radius:10px;padding:11px 14px;display:flex;align-items:flex-start;gap:10px;}
+.ins-ico{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.ins-title{font-size:12px;font-weight:500;margin-bottom:2px;}
+.ins-body{font-size:11px;color:var(--t1);line-height:1.5;}
+.hero-mons{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--s4);border-top:1px solid var(--s4);}
+.mon{background:var(--s1);padding:12px 14px;cursor:pointer;transition:background .15s;}
+.mon:hover{background:var(--s2);}
+.mon-lbl{font-size:9px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--t2);margin-bottom:5px;}
+.mon-val{font-family:'DM Mono',monospace;font-size:22px;font-weight:500;line-height:1;}
+.mon-sub{font-size:10px;color:var(--t1);margin-top:3px;display:flex;align-items:center;gap:4px;}
+.mon-dot{width:6px;height:6px;border-radius:50%;}
+
+/* DATA ROWS */
+.dlist{background:var(--s1);border:1px solid var(--s4);border-radius:14px;overflow:hidden;margin:0 16px 14px;}
+.drow{display:flex;align-items:center;gap:12px;padding:12px 15px;border-bottom:1px solid var(--s4);cursor:pointer;transition:background .15s;}
+.drow:last-child{border-bottom:none;}
+.drow:hover{background:var(--s2);}
+.drow-ico{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.drow-info{flex:1;}
+.drow-label{font-size:12px;font-weight:500;}
+.drow-sub{font-size:10px;color:var(--t1);margin-top:2px;}
+.drow-r{text-align:right;}
+.drow-val{font-family:'DM Mono',monospace;font-size:18px;font-weight:500;line-height:1;}
+.drow-prev{font-size:10px;color:var(--t2);margin-top:2px;}
+.chev{color:var(--t3);margin-left:3px;}
+.chev svg{width:14px;height:14px;}
+
+/* CHALLENGES */
+.cscroll{display:flex;gap:10px;overflow-x:auto;padding:0 16px 6px;}
+.cscroll::-webkit-scrollbar{display:none;}
+.ccard{flex-shrink:0;width:196px;background:var(--s1);border:1px solid var(--s4);border-radius:14px;overflow:hidden;cursor:pointer;transition:all .2s;}
+.ccard:hover{transform:translateY(-2px);border-color:var(--s5);}
+.ctop{height:2.5px;}
+.cimg{width:100%;height:80px;object-fit:cover;display:block;background:var(--s3);}
+.cbody{padding:10px 12px 12px;}
+.ctype{font-size:9px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:4px;}
+.cname{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;line-height:1.2;margin-bottom:5px;}
+.cdesc{font-size:11px;color:var(--t1);line-height:1.4;margin-bottom:9px;}
+.cfoot{display:flex;align-items:center;justify-content:space-between;}
+.cpts{font-family:'DM Mono',monospace;font-size:13px;font-weight:500;color:var(--gold);}
+.ctimer{font-size:10px;color:var(--t2);}
+.cbar{height:2px;background:var(--s3);border-radius:1px;margin-top:8px;overflow:hidden;}
+.cbar-f{height:100%;border-radius:1px;}
+.cprog{font-size:10px;color:var(--t2);margin-top:4px;}
+
+/* BOARDS */
+.btabs{display:flex;gap:5px;overflow-x:auto;padding-bottom:2px;}
+.btabs::-webkit-scrollbar{display:none;}
+.btab{flex-shrink:0;padding:5px 13px;background:var(--s2);border:1px solid var(--s4);border-radius:20px;font-size:11px;font-weight:500;color:var(--t1);cursor:pointer;transition:all .15s;white-space:nowrap;}
+.btab.active{background:var(--red);border-color:var(--red);color:#fff;}
+.btab:not(.active):hover{color:var(--t0);border-color:var(--s5);}
+.bpanel{display:none;margin-top:10px;}
+.bpanel.active{display:block;}
+.brow{display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--s4);cursor:pointer;transition:background .15s;}
+.brow:last-child{border-bottom:none;}
+.brow:hover{background:var(--s2);}
+.brow.you{background:rgba(232,0,29,.04);}
+.bpos{font-family:'DM Mono',monospace;font-size:14px;font-weight:500;min-width:24px;text-align:center;color:var(--t2);}
+.bp-g{color:var(--gold);}.bp-s{color:#aaa;}.bp-b{color:#cd7f32;}
+.bavi{width:32px;height:32px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;border:1px solid var(--s4);background:var(--s2);}
+.binfo{flex:1;min-width:0;}
+.bname{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.bsub{font-size:10px;color:var(--t2);margin-top:2px;}
+.bval{font-family:'DM Mono',monospace;font-size:17px;font-weight:500;color:var(--gold);white-space:nowrap;}
+.bsep{height:1px;background:var(--s4);margin:2px 0;}
+.bnote{font-size:11px;color:var(--t2);padding:10px 14px;background:var(--s2);border-bottom:1px solid var(--s4);}
+.btrend-u{font-size:10px;color:var(--green);}.btrend-d{font-size:10px;color:var(--red);}
+
+/* FEED */
+.fi{padding:14px 16px 0;border-top:1px solid var(--s4);}
+.fi-hd{display:flex;align-items:center;gap:9px;margin-bottom:10px;}
+.fi-avi{width:36px;height:36px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;border:1px solid var(--s4);background:var(--s2);}
+.fi-user{flex:1;}
+.fi-name{font-size:13px;font-weight:500;}
+.fi-act{font-size:11px;color:var(--t1);margin-top:1px;}
+.fi-time{font-size:10px;color:var(--t2);}
+.fi-car{background:var(--s2);border:1px solid var(--s4);border-radius:12px;overflow:hidden;margin-bottom:10px;cursor:pointer;transition:all .2s;}
+.fi-car:hover{border-color:var(--s5);}
+.fi-car img{width:100%;height:148px;object-fit:cover;display:block;background:var(--s3);}
+.fi-car-body{padding:10px 13px 12px;}
+.fi-car-name{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;}
+.fi-meta{display:flex;align-items:center;gap:8px;margin-top:5px;flex-wrap:wrap;}
+.fi-pts{font-family:'DM Mono',monospace;font-size:12px;font-weight:500;color:var(--gold);}
+.fi-loc{font-size:10px;color:var(--t2);margin-left:auto;}
+.fi-acts{display:flex;gap:16px;padding:8px 0 12px;}
+.fi-btn{display:flex;align-items:center;gap:4px;background:none;border:none;font-size:11px;font-weight:500;color:var(--t2);cursor:pointer;padding:0;transition:color .15s;}
+.fi-btn svg{width:14px;height:14px;}
+.fi-btn:hover,.fi-btn.liked{color:var(--red);}
+.fi-comment{font-size:12px;color:var(--t1);padding:0 0 12px;line-height:1.5;}
+
+/* SPOT */
+.vf{margin:16px;border-radius:14px;overflow:hidden;background:var(--s1);border:1px solid var(--s4);position:relative;min-height:230px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.vf-c{position:absolute;width:22px;height:22px;border-color:var(--red);border-style:solid;border-width:0;}
+.c-tl{top:12px;left:12px;border-top-width:2.5px;border-left-width:2.5px;border-radius:2px 0 0 0;}
+.c-tr{top:12px;right:12px;border-top-width:2.5px;border-right-width:2.5px;border-radius:0 2px 0 0;}
+.c-bl{bottom:12px;left:12px;border-bottom-width:2.5px;border-left-width:2.5px;border-radius:0 0 0 2px;}
+.c-br{bottom:12px;right:12px;border-bottom-width:2.5px;border-right-width:2.5px;border-radius:0 0 2px 0;}
+.vf-scan{position:absolute;left:0;right:0;height:1.5px;background:linear-gradient(90deg,transparent,var(--red),transparent);animation:scanline 2.4s linear infinite;opacity:.7;}
+.vf-idle{display:flex;flex-direction:column;align-items:center;gap:12px;padding:36px 24px;text-align:center;}
+.vf-ring{width:60px;height:60px;border-radius:50%;background:var(--s2);border:1.5px dashed var(--s4);display:flex;align-items:center;justify-content:center;}
+.vf-ring svg{width:26px;height:26px;color:var(--t2);}
+.vf-title{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:600;}
+.vf-sub{font-size:12px;color:var(--t1);line-height:1.5;}
+.prev-img{width:100%;max-height:270px;object-fit:cover;display:none;border-radius:14px;}
+.spot-btns{display:flex;gap:9px;margin:0 16px 12px;}
+.sp-btn{flex:1;padding:11px 8px;background:var(--s2);border:1px solid var(--s4);border-radius:10px;color:var(--t1);font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px;}
+.sp-btn:hover{border-color:var(--red);color:var(--t0);}
+.sp-btn svg{width:14px;height:14px;}
+.ident-btn{display:block;width:calc(100% - 32px);margin:0 16px 13px;padding:15px;background:var(--red);border:none;border-radius:10px;color:#fff;font-family:'Rajdhani',sans-serif;font-size:17px;font-weight:700;letter-spacing:3px;cursor:pointer;transition:all .18s;}
+.ident-btn:disabled{opacity:.35;cursor:default;}
+.ident-btn:not(:disabled):hover{filter:brightness(1.12);transform:translateY(-1px);box-shadow:0 6px 22px rgba(232,0,29,.4);}
+.streak-r{display:flex;align-items:center;justify-content:space-between;margin:0 16px 13px;background:var(--s1);border:1px solid var(--s4);border-radius:10px;padding:11px 15px;}
+.str-l{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--t1);}
+.str-v{font-family:'DM Mono',monospace;font-size:20px;font-weight:500;color:var(--orange);}
+.loader{display:none;padding:32px;text-align:center;}
+.loader.show{display:block;}
+.spin{width:38px;height:38px;border:2.5px solid var(--s3);border-top-color:var(--red);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 14px;}
+.load-txt{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--t1);font-family:'DM Mono',monospace;}
+
+/* RARITY REVEAL */
+.reveal-wrap{margin:0 16px 16px;position:relative;display:none;border-radius:14px;overflow:hidden;}
+.reveal-wrap.show{display:block;}
+.reveal-curtain{position:absolute;inset:0;z-index:2;background:var(--s2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;border-radius:14px;transition:opacity .3s;}
+.reveal-curtain.gone{opacity:0;pointer-events:none;}
+.reveal-icon{font-size:38px;}
+.reveal-hint{font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--t1);font-family:'DM Mono',monospace;}
+.res-box{background:var(--s1);border:1px solid var(--s4);border-radius:14px;overflow:hidden;}
+.res-img{width:100%;height:140px;object-fit:cover;display:block;background:var(--s2);}
+.res-hd{padding:13px 15px;border-bottom:1px solid var(--s4);display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+.res-name{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;}
+.res-sub{font-size:11px;color:var(--t1);margin-top:3px;}
+.res-stats{display:grid;grid-template-columns:1fr 1fr 1fr;}
+.rs{padding:12px 0;text-align:center;border-right:1px solid var(--s4);border-bottom:1px solid var(--s4);}
+.rs:last-child{border-right:none;}
+.rs-val{font-family:'DM Mono',monospace;font-size:20px;font-weight:500;line-height:1;}
+.rs-lbl{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--t2);margin-top:3px;}
+.res-desc{padding:12px 15px;font-size:12px;color:var(--t1);line-height:1.65;border-bottom:1px solid var(--s4);}
+.res-acts{display:flex;gap:9px;padding:12px 15px;}
+.res-act{flex:1;padding:11px;border-radius:9px;border:1px solid var(--s4);background:none;color:var(--t1);font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;}
+.res-act.pri{background:var(--red);border-color:var(--red);color:#fff;}
+.res-act:not(.pri):hover{border-color:var(--red);color:var(--t0);}
+
+/* GARAGE */
+.gar-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px 16px;}
+.gcard{background:var(--s1);border:1px solid var(--s4);border-radius:13px;overflow:hidden;cursor:pointer;transition:all .2s;}
+.gcard:hover{transform:translateY(-2px);border-color:var(--s5);}
+.gcard img{width:100%;height:100px;object-fit:cover;display:block;background:var(--s2);}
+.gcard-no-img{width:100%;height:100px;background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:34px;}
+.gcard-body{padding:9px 11px 11px;}
+.gcard-name{font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;line-height:1.2;margin-bottom:5px;}
+.gcard-foot{display:flex;align-items:center;justify-content:space-between;}
+.gcard-pts{font-family:'DM Mono',monospace;font-size:12px;font-weight:500;}
+.gcard-date{font-size:10px;color:var(--t2);}
+.empty-s{grid-column:1/-1;padding:56px 24px;text-align:center;}
+.empty-ico{font-size:48px;opacity:.2;margin-bottom:14px;}
+.empty-txt{font-size:13px;color:var(--t2);line-height:1.6;}
+
+/* MAP */
+.map-wrap{position:relative;height:310px;background:var(--s1);border:1px solid var(--s4);border-radius:14px;overflow:hidden;margin:0 16px 12px;}
+.map-svg{width:100%;height:100%;display:block;}
+.map-spot{cursor:pointer;transition:transform .2s,opacity .2s;}
+.map-spot:hover{transform:scale(1.25);}
+.map-filters{display:flex;gap:7px;overflow-x:auto;padding:0 16px 12px;}
+.map-filters::-webkit-scrollbar{display:none;}
+.mf-btn{flex-shrink:0;padding:5px 13px;border-radius:20px;background:var(--s2);border:1px solid var(--s4);font-size:11px;font-weight:500;color:var(--t1);cursor:pointer;transition:all .15s;}
+.mf-btn.active{background:var(--red);border-color:var(--red);color:#fff;}
+.nearby-list{margin:0 16px;background:var(--s1);border:1px solid var(--s4);border-radius:14px;overflow:hidden;}
+.nb-row{display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--s4);cursor:pointer;transition:background .15s;}
+.nb-row:last-child{border-bottom:none;}
+.nb-row:hover{background:var(--s2);}
+.nb-img{width:44px;height:34px;border-radius:7px;object-fit:cover;background:var(--s3);flex-shrink:0;}
+.nb-info{flex:1;}
+.nb-name{font-size:12px;font-weight:500;}
+.nb-sub{font-size:10px;color:var(--t2);margin-top:2px;}
+.nb-dist{font-family:'DM Mono',monospace;font-size:12px;color:var(--t1);}
+
+/* STATS */
+.sg-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:0 16px 14px;}
+.sg{background:var(--s1);border:1px solid var(--s4);border-radius:12px;padding:15px;}
+.sg-val{font-family:'DM Mono',monospace;font-size:30px;font-weight:500;line-height:1;}
+.sg-lbl{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--t2);margin-top:5px;}
+.rar-card{margin:0 16px 14px;background:var(--s1);border:1px solid var(--s4);border-radius:13px;padding:16px;}
+.rar-title{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--t2);margin-bottom:14px;}
+.rar-row{display:flex;align-items:center;gap:9px;margin-bottom:9px;}
+.rar-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.rar-name{font-size:12px;font-weight:500;width:72px;}
+.rar-bw{flex:1;height:3px;background:var(--s3);border-radius:2px;overflow:hidden;}
+.rar-bf{height:100%;border-radius:2px;transition:width .9s ease;}
+.rar-cnt{font-family:'DM Mono',monospace;font-size:12px;color:var(--t1);min-width:20px;text-align:right;}
+
+/* DETAIL MODAL */
+.modal-bg{position:absolute;inset:0;z-index:300;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity .25s;}
+.modal-bg.open{opacity:1;pointer-events:all;}
+.modal-sheet{width:100%;background:var(--s0);border-radius:20px 20px 0 0;transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);padding-bottom:env(safe-area-inset-bottom,0);}
+.modal-bg.open .modal-sheet{transform:none;}
+.modal-handle{width:36px;height:4px;border-radius:2px;background:var(--s5);margin:12px auto 0;}
+.modal-img{width:100%;height:195px;object-fit:cover;display:block;background:var(--s2);}
+.modal-body{padding:18px 20px;}
+.modal-title{font-family:'Rajdhani',sans-serif;font-size:26px;font-weight:700;}
+.modal-sub{font-size:12px;color:var(--t1);margin-top:3px;margin-bottom:14px;}
+.modal-sg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px;}
+.modal-s{background:var(--s2);border:1px solid var(--s4);border-radius:10px;padding:11px;text-align:center;}
+.ms-val{font-family:'DM Mono',monospace;font-size:18px;font-weight:500;line-height:1;}
+.ms-lbl{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--t2);margin-top:3px;}
+.modal-desc{font-size:13px;color:var(--t1);line-height:1.65;margin-bottom:16px;}
+.modal-share-btn{width:100%;padding:14px;background:var(--red);border:none;border-radius:10px;color:#fff;font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;letter-spacing:2px;cursor:pointer;transition:all .18s;margin-bottom:10px;}
+.modal-share-btn:hover{filter:brightness(1.1);}
+.modal-close-btn{width:100%;padding:12px;background:none;border:1px solid var(--s4);border-radius:10px;color:var(--t1);font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;}
+.modal-close-btn:hover{border-color:var(--s5);color:var(--t0);}
+
+/* SHARE */
+.share-bg{position:absolute;inset:0;z-index:400;background:rgba(0,0,0,.88);display:none;align-items:center;justify-content:center;padding:24px;}
+.share-bg.open{display:flex;}
+.share-wrap{width:100%;max-width:340px;position:relative;}
+.share-x{position:absolute;top:-14px;right:0;width:36px;height:36px;border-radius:50%;background:var(--s2);border:1px solid var(--s4);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--t1);}
+.share-x svg{width:16px;height:16px;}
+.share-card{width:100%;border-radius:16px;overflow:hidden;position:relative;}
+.share-card img{width:100%;height:195px;object-fit:cover;display:block;}
+.share-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.15),rgba(0,0,0,.82));}
+.share-content{position:absolute;bottom:0;left:0;right:0;padding:18px;}
+.sc-logo{font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;letter-spacing:3px;color:rgba(255,255,255,.5);margin-bottom:6px;}
+.sc-logo b{color:var(--red);}
+.sc-car{font-family:'Rajdhani',sans-serif;font-size:23px;font-weight:700;color:#fff;}
+.sc-meta{display:flex;align-items:center;gap:8px;margin-top:5px;}
+.sc-pts{font-family:'DM Mono',monospace;font-size:14px;font-weight:500;color:var(--gold);}
+.share-acts{display:flex;gap:9px;margin-top:12px;}
+.share-act{flex:1;padding:12px;border-radius:10px;border:1.5px solid rgba(255,255,255,.15);background:rgba(255,255,255,.08);color:#fff;font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;backdrop-filter:blur(4px);}
+.share-act:hover{border-color:rgba(255,255,255,.3);}
+.share-act.pri{background:var(--red);border-color:var(--red);}
+
+/* TOASTS */
+.toast-stack{position:absolute;top:70px;right:12px;z-index:600;display:flex;flex-direction:column;gap:7px;pointer-events:none;}
+.toast{background:var(--s2);border:1px solid var(--s5);border-radius:12px;padding:10px 13px;display:flex;align-items:center;gap:9px;max-width:248px;pointer-events:all;box-shadow:0 4px 20px rgba(0,0,0,.4);}
+.toast.tin{animation:toastIn .28s ease forwards;}
+.toast.tout{animation:toastOut .28s ease forwards;}
+.toast-ico{font-size:16px;flex-shrink:0;}
+.toast-text{flex:1;}
+.toast-title{font-size:12px;font-weight:500;color:var(--t0);}
+.toast-sub{font-size:10px;color:var(--t1);margin-top:1px;}
+
+/* FLASH / PTS */
+.flash-el{position:fixed;inset:0;background:#fff;z-index:9999;pointer-events:none;opacity:0;}
+.flash-el.go{animation:flashK .5s forwards;}
+.pts-pop{position:fixed;top:38%;left:50%;z-index:9998;pointer-events:none;text-align:center;display:none;}
+.pts-pop.go{display:block;animation:burst 2.2s ease forwards;}
+.pts-num{font-family:'Rajdhani',sans-serif;font-size:64px;font-weight:700;color:var(--gold);text-shadow:0 0 40px rgba(240,180,41,.5);line-height:1;}
+.pts-lbl{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--t1);font-family:'DM Mono',monospace;}
+
+/* ═══ FEATURE 4: MICRO-INTERACTIONS ═══ */
+@keyframes tapPulse{0%{transform:scale(1);}40%{transform:scale(.94);}100%{transform:scale(1);}}
+@keyframes ringCountUp{from{stroke-dashoffset:201;}to{stroke-dashoffset:var(--final-offset,72);}}
+@keyframes tabSlideIn{from{opacity:0;transform:translateX(12px);}to{opacity:1;transform:none;}}
+@keyframes ripple{0%{transform:scale(0);opacity:.4;}100%{transform:scale(2.5);opacity:0;}}
+@keyframes numTick{0%{opacity:0;transform:translateY(6px);}100%{opacity:1;transform:none;}}
+.tap-active{animation:tapPulse .22s ease!important;}
+.nb{position:relative;overflow:hidden;}
+.nb-ripple{position:absolute;border-radius:50%;background:rgba(232,0,29,.25);animation:ripple .5s ease forwards;pointer-events:none;}
+.fab{position:relative;overflow:hidden;}
+.fab-ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.3);animation:ripple .5s ease forwards;pointer-events:none;}
+.ring-fg{transition:stroke-dashoffset 1.4s cubic-bezier(.4,0,.2,1);}
+.ring-val{transition:all .4s ease;}
+.num-tick{animation:numTick .35s ease both;}
+.btab{transition:all .18s cubic-bezier(.4,0,.2,1);}
+.btab.active{transform:scale(1.03);}
+.gcard{transition:transform .2s cubic-bezier(.4,0,.2,1),border-color .2s,box-shadow .2s;}
+.gcard:active{transform:scale(.97)!important;}
+.ccard:active{transform:scale(.97)!important;}
+.nb:active{transform:scale(.92);}
+.fab:active .fab{transform:scale(.93);}
+.ident-btn:not(:disabled):active{transform:scale(.97)!important;}
+.ob-btn:active{transform:scale(.97)!important;}
+.drow:active{background:var(--s3)!important;}
+
+/* ═══ FEATURE 5: EXPLORE SCREEN ═══ */
+.explore-search-wrap{padding:0 16px 12px;position:relative;}
+.explore-search{width:100%;padding:11px 16px 11px 40px;background:var(--s2);border:1.5px solid var(--s4);border-radius:10px;color:var(--t0);font-family:"DM Sans",sans-serif;font-size:14px;outline:none;transition:border-color .2s;}
+.explore-search:focus{border-color:var(--red);}
+.explore-search::placeholder{color:var(--t2);}
+.search-ico{position:absolute;left:28px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--t2);pointer-events:none;}
+.explore-filters{display:flex;gap:6px;overflow-x:auto;padding:0 16px 12px;}
+.explore-filters::-webkit-scrollbar{display:none;}
+.ef{flex-shrink:0;padding:5px 13px;border-radius:20px;background:var(--s2);border:1px solid var(--s4);font-size:11px;font-weight:500;color:var(--t1);cursor:pointer;transition:all .15s;}
+.ef.active{background:var(--red);border-color:var(--red);color:#fff;}
+.explore-sort{display:flex;align-items:center;justify-content:space-between;padding:0 16px 10px;}
+.explore-sort-lbl{font-size:11px;color:var(--t1);}
+.explore-sort-select{background:var(--s2);border:1px solid var(--s4);border-radius:7px;padding:5px 10px;font-size:11px;color:var(--t0);font-family:"DM Sans",sans-serif;outline:none;cursor:pointer;}
+.explore-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px 16px;}
+.ecard{background:var(--s1);border:1px solid var(--s4);border-radius:13px;overflow:hidden;cursor:pointer;transition:all .2s;}
+.ecard:hover{transform:translateY(-2px);border-color:var(--s5);}
+.ecard:active{transform:scale(.97);}
+.ecard img{width:100%;height:96px;object-fit:cover;display:block;background:var(--s2);}
+.ecard-body{padding:9px 11px 11px;}
+.ecard-name{font-family:"Rajdhani",sans-serif;font-size:14px;font-weight:700;line-height:1.2;margin-bottom:4px;}
+.ecard-meta{display:flex;align-items:center;justify-content:space-between;}
+.ecard-pts{font-family:"DM Mono",monospace;font-size:11px;font-weight:500;}
+.ecard-country{font-size:10px;color:var(--t2);}
+.explore-empty{grid-column:1/-1;padding:48px 24px;text-align:center;color:var(--t2);font-size:13px;}
+.explore-count{padding:0 16px 8px;font-size:11px;color:var(--t2);font-family:"DM Mono",monospace;}
+
+/* ═══ FEATURE 6: PWA INSTALL BANNER ═══ */
+.pwa-banner{
+  position:absolute;bottom:var(--nav-h,58px);left:0;right:0;z-index:250;
+  background:linear-gradient(135deg,var(--s1),var(--s2));
+  border-top:1px solid var(--s5);
+  padding:14px 18px;
+  display:flex;align-items:center;gap:12px;
+  transform:translateY(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);
+}
+.pwa-banner.show{transform:none;}
+.pwa-icon{width:44px;height:44px;border-radius:12px;background:var(--red);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:"Rajdhani",sans-serif;font-size:14px;font-weight:700;letter-spacing:1px;color:#fff;}
+.pwa-text{flex:1;}
+.pwa-title{font-size:13px;font-weight:500;color:var(--t0);margin-bottom:2px;}
+.pwa-sub{font-size:11px;color:var(--t1);}
+.pwa-install{padding:8px 16px;background:var(--red);border:none;border-radius:8px;color:#fff;font-family:"Barlow Condensed","DM Sans",sans-serif;font-size:12px;font-weight:700;letter-spacing:1.5px;cursor:pointer;flex-shrink:0;transition:all .18s;}
+.pwa-install:hover{filter:brightness(1.1);}
+.pwa-dismiss{width:28px;height:28px;border-radius:50%;background:none;border:none;color:var(--t2);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+
+/* ═══ FEATURE 7: NOTIFICATION CENTRE ═══ */
+.notif-panel{
+  position:absolute;top:0;right:0;bottom:0;width:320px;
+  background:var(--s0);border-left:1px solid var(--s4);
+  z-index:400;transform:translateX(100%);
+  transition:transform .3s cubic-bezier(.4,0,.2,1);
+  display:flex;flex-direction:column;
+  box-shadow:-8px 0 32px rgba(0,0,0,.4);
+}
+.notif-panel.open{transform:none;}
+.notif-panel-head{padding:16px 18px;border-bottom:1px solid var(--s4);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.notif-panel-title{font-family:"Rajdhani",sans-serif;font-size:18px;font-weight:700;letter-spacing:.5px;}
+.notif-clear{font-size:11px;color:var(--t2);background:none;border:none;cursor:pointer;font-family:"DM Sans",sans-serif;transition:color .15s;}
+.notif-clear:hover{color:var(--red);}
+.notif-close{width:30px;height:30px;border-radius:50%;background:var(--s2);border:1px solid var(--s4);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--t1);}
+.notif-close svg{width:14px;height:14px;}
+.notif-list{flex:1;overflow-y:auto;padding:8px 0;}
+.notif-list::-webkit-scrollbar{display:none;}
+.notif-item{display:flex;align-items:flex-start;gap:11px;padding:12px 18px;border-bottom:1px solid var(--border,var(--s4));cursor:pointer;transition:background .15s;position:relative;}
+.notif-item:hover{background:var(--s2);}
+.notif-item.unread::before{content:"";position:absolute;left:6px;top:50%;transform:translateY(-50%);width:5px;height:5px;border-radius:50%;background:var(--red);}
+.notif-ico{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.notif-body{flex:1;min-width:0;}
+.notif-title{font-size:12px;font-weight:500;color:var(--t0);line-height:1.4;}
+.notif-sub{font-size:11px;color:var(--t1);margin-top:2px;line-height:1.4;}
+.notif-time{font-size:10px;color:var(--t3);margin-top:3px;font-family:"DM Mono",monospace;}
+.notif-badge{position:absolute;top:-4px;right:-4px;background:var(--red);color:#fff;font-size:9px;font-weight:700;font-family:"DM Mono",monospace;padding:1px 5px;border-radius:8px;border:1.5px solid var(--s0);}
+.notif-section-label{padding:10px 18px 6px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--t3);font-family:"DM Mono",monospace;}
+.notif-empty{padding:48px 24px;text-align:center;color:var(--t2);font-size:13px;}
+.notif-overlay{position:absolute;inset:0;z-index:399;display:none;}
+.notif-overlay.open{display:block;}
+
+
+/* ═══ PROFILE SCREEN ═══ */
+.profile-hero{margin:16px;background:var(--s1);border:1px solid var(--s4);border-radius:18px;overflow:hidden;}
+.profile-cover{height:90px;background:linear-gradient(135deg,var(--red-d),#300008,var(--s3));position:relative;}
+.profile-cover-pattern{position:absolute;inset:0;background:repeating-linear-gradient(-55deg,transparent,transparent 18px,rgba(255,255,255,.03) 18px,rgba(255,255,255,.03) 19px);}
+.profile-avi-wrap{position:absolute;bottom:-24px;left:20px;}
+.profile-avi-lg{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--red),var(--red-d));display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:18px;font-weight:500;color:#fff;border:3px solid var(--s1);}
+.profile-body{padding:32px 20px 18px;}
+.profile-username{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;margin-bottom:2px;}
+.profile-country{font-size:12px;color:var(--t1);margin-bottom:14px;display:flex;align-items:center;gap:5px;}
+.profile-rank-bar{background:var(--s2);border:1px solid var(--s4);border-radius:10px;padding:11px 14px;margin-bottom:0;}
+.prb-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+.prb-rank{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:var(--gold);}
+.prb-next{font-size:10px;color:var(--t2);}
+.prb-bar{height:4px;background:var(--s3);border-radius:2px;overflow:hidden;}
+.prb-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--orange));border-radius:2px;transition:width 1s ease;}
+.profile-stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--s4);border-top:1px solid var(--s4);}
+.ps{background:var(--s1);padding:11px 0;text-align:center;}
+.ps-val{font-family:'DM Mono',monospace;font-size:18px;font-weight:500;line-height:1;}
+.ps-lbl{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--t2);margin-top:2px;}
+.pref-section{margin:0 16px 14px;}
+.pref-title{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--t2);font-family:'DM Mono',monospace;margin-bottom:10px;}
+.pref-card{background:var(--s1);border:1px solid var(--s4);border-radius:14px;overflow:hidden;}
+.pref-row{display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid var(--s4);cursor:pointer;transition:background .15s;}
+.pref-row:last-child{border-bottom:none;}
+.pref-row:hover{background:var(--s2);}
+.pref-row:active{background:var(--s3);}
+.pref-ico{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.pref-label{flex:1;font-size:13px;font-weight:500;}
+.pref-val{font-size:12px;color:var(--t2);}
+.pref-chev{color:var(--t3);}
+.pref-chev svg{width:14px;height:14px;}
+.toggle-wrap{width:40px;height:22px;border-radius:11px;background:var(--s3);position:relative;cursor:pointer;transition:background .2s;flex-shrink:0;}
+.toggle-wrap.on{background:var(--green);}
+.toggle-knob{position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 4px rgba(0,0,0,.3);}
+.toggle-wrap.on .toggle-knob{transform:translateX(18px);}
+.edit-input{width:100%;padding:12px 14px;background:var(--s2);border:1.5px solid var(--s4);border-radius:10px;color:var(--t0);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color .2s;margin-bottom:10px;}
+.edit-input:focus{border-color:var(--red);}
+.save-btn{width:100%;padding:13px;background:var(--red);border:none;border-radius:10px;color:#fff;font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;letter-spacing:2px;cursor:pointer;transition:all .18s;margin-bottom:8px;}
+.save-btn:hover{filter:brightness(1.1);}
+.danger-btn{width:100%;padding:12px;background:none;border:1px solid rgba(232,0,29,.3);border-radius:10px;color:var(--red);font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;}
+.danger-btn:hover{background:var(--red-lo);}
+.niches-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:10px;}
+.niche-chip{padding:9px 12px;background:var(--s2);border:1.5px solid var(--s4);border-radius:9px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:7px;font-size:12px;font-weight:500;color:var(--t0);}
+.niche-chip.on{border-color:var(--red);background:var(--red-lo);}
+
+/* ═══ GARAGE FILTERS ═══ */
+.gar-filter-row{display:flex;gap:6px;overflow-x:auto;padding:0 16px 12px;}
+.gar-filter-row::-webkit-scrollbar{display:none;}
+.gf{flex-shrink:0;padding:5px 12px;border-radius:20px;background:var(--s2);border:1px solid var(--s4);font-size:11px;font-weight:500;color:var(--t1);cursor:pointer;transition:all .15s;}
+.gf.active{background:var(--red);border-color:var(--red);color:#fff;}
+.gar-sort-row{display:flex;align-items:center;justify-content:space-between;padding:0 16px 10px;}
+.gar-sort-select{background:var(--s2);border:1px solid var(--s4);border-radius:7px;padding:5px 10px;font-size:11px;color:var(--t0);font-family:'DM Sans',sans-serif;outline:none;cursor:pointer;}
+
+/* ═══ STREAK CALENDAR ═══ */
+.streak-cal{margin:0 16px 14px;background:var(--s1);border:1px solid var(--s4);border-radius:14px;padding:16px;}
+.cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.cal-title{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--t2);}
+.cal-streak-num{font-family:'DM Mono',monospace;font-size:16px;font-weight:500;color:var(--orange);}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+.cal-day-lbl{font-size:8px;letter-spacing:1px;text-transform:uppercase;color:var(--t3);text-align:center;margin-bottom:4px;}
+.cal-day{aspect-ratio:1;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:9px;font-family:'DM Mono',monospace;font-weight:500;cursor:default;}
+.cal-day.empty{background:transparent;}
+.cal-day.spotted{background:var(--orange);color:#fff;}
+.cal-day.today{background:var(--red);color:#fff;box-shadow:0 0 0 2px rgba(232,0,29,.3);}
+.cal-day.missed{background:var(--s3);color:var(--t3);}
+.cal-day.future{background:transparent;color:var(--t3);}
+.cal-legend{display:flex;align-items:center;gap:12px;margin-top:10px;flex-wrap:wrap;}
+.cl-item{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--t2);}
+.cl-dot{width:8px;height:8px;border-radius:3px;flex-shrink:0;}
+
+/* ═══ TIMELINE VIEW ═══ */
+.timeline{padding:0 16px 14px;}
+.tl-item{display:flex;gap:12px;margin-bottom:0;}
+.tl-line-col{display:flex;flex-direction:column;align-items:center;width:32px;flex-shrink:0;}
+.tl-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:4px;border:2px solid var(--s0);}
+.tl-line{flex:1;width:1px;background:var(--s4);margin-top:3px;min-height:28px;}
+.tl-item:last-child .tl-line{display:none;}
+.tl-content{flex:1;background:var(--s1);border:1px solid var(--s4);border-radius:10px;padding:10px 12px;margin-bottom:8px;cursor:pointer;transition:background .15s;}
+.tl-content:hover{background:var(--s2);}
+.tl-car-name{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;margin-bottom:3px;}
+.tl-meta{display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
+.tl-pts{font-family:'DM Mono',monospace;font-size:11px;font-weight:500;}
+.tl-date{font-size:10px;color:var(--t2);}
+
+/* ═══ CHALLENGE TIMER ═══ */
+.chal-timer-live{font-family:'DM Mono',monospace;font-size:10px;color:var(--red);}
+
+/* ═══ MAP QUICK ACCESS ═══ */
+.map-access-btn{display:flex;align-items:center;gap:8px;padding:11px 14px;background:var(--s2);border:1px solid var(--s4);border-radius:10px;cursor:pointer;transition:all .15s;margin:0 16px 14px;}
+.map-access-btn:hover{border-color:var(--red);}
+.map-access-btn svg{width:15px;height:15px;color:var(--t1);}
+.map-access-label{font-size:12px;font-weight:500;flex:1;}
+.map-access-count{font-family:'DM Mono',monospace;font-size:11px;color:var(--t2);}
+</style>
+</head>
+<body>
+<div class="flash-el" id="flashEl"></div>
+<div class="pts-pop" id="ptsPop"><div class="pts-num" id="ptsN">+0</div><div class="pts-lbl">pts earned</div></div>
+
+<div class="shell" id="shell">
+
+<!-- ONBOARDING -->
+<div class="onboard" id="onboard">
+  <div class="ob-step ob-active" id="ob1">
+    <div class="ob-hero" style="height:260px;">
+      <img src="https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&q=85" alt="">
+      <div class="ob-grad"></div>
+      <div class="ob-logo-wrap"><div class="ob-logo">TRO<b>T</b>L</div></div>
+    </div>
+    <div class="ob-body">
+      <div class="ob-title">Spot rare cars.<br>Earn serious points.</div>
+      <div class="ob-sub">Trotl is the AI-powered sport car spotter. Photograph any car — we identify it and score it by rarity. Chase Unicorns. Climb leaderboards.</div>
+      <div class="stat-mini-grid">
+        <div class="stat-mini"><div class="stat-mini-val" style="color:var(--gold)">6</div><div class="stat-mini-lbl">Rarity tiers</div></div>
+        <div class="stat-mini"><div class="stat-mini-val" style="color:var(--red)">AI</div><div class="stat-mini-lbl">Powered ID</div></div>
+        <div class="stat-mini"><div class="stat-mini-val" style="color:var(--green)">5</div><div class="stat-mini-lbl">Leaderboards</div></div>
+        <div class="stat-mini"><div class="stat-mini-val" style="color:var(--blue)">🗺</div><div class="stat-mini-lbl">Spot Map</div></div>
+      </div>
+    </div>
+    <div class="ob-footer">
+      <div class="ob-dots"><div class="ob-dot active"></div><div class="ob-dot"></div><div class="ob-dot"></div></div>
+      <button class="ob-btn" onclick="obNext(1)">GET STARTED →</button>
+    </div>
+  </div>
+
+  <div class="ob-step" id="ob2">
+    <div class="ob-hero" style="height:180px;">
+      <img src="https://images.unsplash.com/photo-1592198084033-aade902d1aae?w=600&q=80" alt="" style="filter:brightness(.7);">
+      <div class="ob-grad"></div>
+      <div class="ob-logo-wrap"><div class="ob-logo" style="font-size:26px;">TRO<b>T</b>L</div></div>
+    </div>
+    <div class="ob-body">
+      <div class="ob-title">Who's behind the wheel?</div>
+      <div class="ob-sub">Set your username and country to join your local leaderboard.</div>
+      <input class="ob-input" id="ob-name" type="text" placeholder="Your username" maxlength="20" oninput="checkOb2()">
+      <div class="ob-lbl">Your Country</div>
+      <div class="ob-countries">
+        <div class="ob-ctry" onclick="selCtry(this,'🇮🇪 Ireland')">🇮🇪 Ireland</div>
+        <div class="ob-ctry" onclick="selCtry(this,'🇬🇧 UK')">🇬🇧 UK</div>
+        <div class="ob-ctry" onclick="selCtry(this,'🇮🇹 Italy')">🇮🇹 Italy</div>
+        <div class="ob-ctry" onclick="selCtry(this,'🇩🇪 Germany')">🇩🇪 Germany</div>
+        <div class="ob-ctry" onclick="selCtry(this,'🇺🇸 USA')">🇺🇸 USA</div>
+        <div class="ob-ctry" onclick="selCtry(this,'🇫🇷 France')">🇫🇷 France</div>
+        <div class="ob-ctry" onclick="selCtry(this,'🇯🇵 Japan')">🇯🇵 Japan</div>
+        <div class="ob-ctry" onclick="selCtry(this,'🌍 Other')">🌍 Other</div>
+      </div>
+    </div>
+    <div class="ob-footer">
+      <div class="ob-dots"><div class="ob-dot"></div><div class="ob-dot active"></div><div class="ob-dot"></div></div>
+      <button class="ob-btn" id="ob2-btn" disabled onclick="obNext(2)">CONTINUE →</button>
+    </div>
+  </div>
+
+  <div class="ob-step" id="ob3">
+    <div class="ob-hero" style="height:160px;">
+      <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600&q=80" alt="" style="filter:brightness(.6);">
+      <div class="ob-grad"></div>
+      <div class="ob-logo-wrap"><div class="ob-logo" style="font-size:24px;">TRO<b>T</b>L</div></div>
+    </div>
+    <div class="ob-body" style="overflow-y:auto;">
+      <div class="ob-title">Your niche boards</div>
+      <div class="ob-sub">Pick your specialist interests — you'll appear on these leaderboards automatically.</div>
+      <div class="ob-grid">
+        <div class="ob-chip" onclick="togNiche(this,'italian')"><div class="ob-chip-ico">🇮🇹</div><div><div class="ob-chip-label">Italian Cars</div><div class="ob-chip-sub">Ferrari, Lambo, Pagani</div></div></div>
+        <div class="ob-chip" onclick="togNiche(this,'german')"><div class="ob-chip-ico">🇩🇪</div><div><div class="ob-chip-label">German</div><div class="ob-chip-sub">Porsche, BMW, AMG</div></div></div>
+        <div class="ob-chip" onclick="togNiche(this,'80s')"><div class="ob-chip-ico">📼</div><div><div class="ob-chip-label">80s Era</div><div class="ob-chip-sub">1980–1989 classics</div></div></div>
+        <div class="ob-chip" onclick="togNiche(this,'hypercar')"><div class="ob-chip-ico">🚀</div><div><div class="ob-chip-label">Hypercars</div><div class="ob-chip-sub">Epic+ rarity only</div></div></div>
+        <div class="ob-chip" onclick="togNiche(this,'jdm')"><div class="ob-chip-ico">🇯🇵</div><div><div class="ob-chip-label">JDM</div><div class="ob-chip-sub">Japanese performance</div></div></div>
+        <div class="ob-chip" onclick="togNiche(this,'muscle')"><div class="ob-chip-ico">🦅</div><div><div class="ob-chip-label">Muscle Cars</div><div class="ob-chip-sub">American muscle</div></div></div>
+      </div>
+    </div>
+    <div class="ob-footer">
+      <div class="ob-dots"><div class="ob-dot"></div><div class="ob-dot"></div><div class="ob-dot active"></div></div>
+      <button class="ob-btn" onclick="finishOnboard()">START SPOTTING 🏁</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div><div class="logo">TRO<b>T</b>L</div><div class="logo-sub" id="tb-sub">Spot · Earn · Dominate</div></div>
+  <div class="tb-r">
+    <div class="tb-ico" onclick="toggleTheme()" title="Light/Dark">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </div>
+    <div class="tb-ico" id="bellBtn" onclick="openNotifPanel()" style="position:relative;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <div class="pip" id="bellPip"></div>
+      <div class="notif-badge" id="bellBadge" style="display:none;">3</div>
+    </div>
+    <div class="tb-avi" id="tb-avi">MW</div>
+  </div>
+</div>
+
+<!-- SCREENS -->
+<div class="screens">
+
+<!-- HOME -->
+<div class="screen active" id="s-home">
+  <div class="ring-hero a1">
+    <div class="hero-accent"></div>
+    <div class="hero-body">
+      <div class="hero-greeting">Good evening,</div>
+      <div class="hero-name" id="h-name">Max <span>Wheeler</span></div>
+      <div class="rings-row">
+        <div class="ring-item">
+          <div class="ring-wrap">
+            <svg viewBox="0 0 76 76"><circle class="ring-bg" cx="38" cy="38" r="32"/><circle class="ring-fg" id="rg-pts" cx="38" cy="38" r="32" stroke="var(--gold)" stroke-dasharray="201" stroke-dashoffset="72"/></svg>
+            <div class="ring-center"><div class="ring-val" style="color:var(--gold);font-size:13px;" id="h-pts">4,820</div><div class="ring-unit">pts</div></div>
+          </div>
+          <div class="ring-lbl" style="color:var(--gold)">Points</div>
+          <div class="ring-delta">▲ +340 wk</div>
+        </div>
+        <div class="ring-item">
+          <div class="ring-wrap">
+            <svg viewBox="0 0 76 76"><circle class="ring-bg" cx="38" cy="38" r="32"/><circle class="ring-fg" id="rg-rank" cx="38" cy="38" r="32" stroke="var(--red)" stroke-dasharray="201" stroke-dashoffset="72"/></svg>
+            <div class="ring-center"><div class="ring-val" id="h-rank" style="color:var(--red);font-size:11px;font-family:'Rajdhani',sans-serif;font-weight:700;">Racer</div><div class="ring-unit">rank</div></div>
+          </div>
+          <div class="ring-lbl" style="color:var(--red)">Rank</div>
+          <div class="ring-delta" id="h-rank-pct">64% to next</div>
+        </div>
+        <div class="ring-item">
+          <div class="ring-wrap">
+            <svg viewBox="0 0 76 76"><circle class="ring-bg" cx="38" cy="38" r="32"/><circle class="ring-fg" cx="38" cy="38" r="32" stroke="var(--orange)" stroke-dasharray="201" stroke-dashoffset="130"/></svg>
+            <div class="ring-center"><div class="ring-val" id="h-streak-v" style="color:var(--orange)">7</div><div class="ring-unit">days</div></div>
+          </div>
+          <div class="ring-lbl" style="color:var(--orange)">Streak</div>
+          <div class="ring-delta">🔥 best</div>
+        </div>
+      </div>
+      <div class="insight">
+        <div class="ins-ico" style="background:var(--gold-lo)">🏆</div>
+        <div><div class="ins-title">Elevated Rarity Score</div><div class="ins-body">Your last 3 spots averaged Rare+. You're tracking above 87% of spotters globally this week.</div></div>
+      </div>
+    </div>
+    <div class="hero-mons">
+      <div class="mon" onclick="goTo('ranks')"><div class="mon-lbl">Global Rank</div><div class="mon-val">#14</div><div class="mon-sub"><div class="mon-dot" style="background:var(--green)"></div>Top 8%</div></div>
+      <div class="mon" onclick="goTo('stats')"><div class="mon-lbl">Spotted</div><div class="mon-val" id="h-spots" style="color:var(--blue)">0</div><div class="mon-sub"><div class="mon-dot" style="background:var(--blue)"></div><span id="h-epics">0</span> Epic+</div></div>
+    </div>
+  </div>
+
+  <div class="ph a2" style="margin-bottom:10px;"><div class="rh"><div class="rl">Today's Spots</div><button class="ra">See all</button></div></div>
+  <div class="dlist a2">
+    <div class="drow"><div class="drow-ico" style="background:var(--prp-lo)">🟡</div><div class="drow-info"><div class="drow-label">Porsche GT3 RS</div><div class="drow-sub">Epic · 09:14 · Dublin</div></div><div class="drow-r"><div class="drow-val" style="color:var(--green)">+380</div><div class="drow-prev">pts</div></div><div class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div></div>
+    <div class="drow"><div class="drow-ico" style="background:var(--blu-lo)">⚡</div><div class="drow-info"><div class="drow-label">BMW M4 CSL</div><div class="drow-sub">Rare · 07:52 · Dublin</div></div><div class="drow-r"><div class="drow-val" style="color:var(--gold)">+175</div><div class="drow-prev">pts</div></div><div class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div></div>
+  </div>
+
+  <div class="ph a3" style="margin-bottom:10px;"><div class="rh"><div class="rl">Challenges</div><button class="ra">All →</button></div></div>
+  <div class="cscroll a3">
+    <div class="ccard"><div class="ctop" style="background:linear-gradient(90deg,var(--red),var(--orange))"></div><img class="cimg" src="https://images.unsplash.com/photo-1592198084033-aade902d1aae?w=400&q=75" loading="lazy" alt=""><div class="cbody"><div class="ctype" style="color:var(--red)">🔥 Daily</div><div class="cname">Prancing Horse</div><div class="cdesc">Spot any Ferrari today.</div><div class="cfoot"><div class="cpts">+500</div><div class="chal-timer-live" id="ct-daily">6:22:00</div></div><div class="cbar"><div class="cbar-f" style="width:0%;background:var(--red)"></div></div><div class="cprog">0/1</div></div></div>
+    <div class="ccard"><div class="ctop" style="background:linear-gradient(90deg,var(--purple),var(--blue))"></div><img class="cimg" src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=400&q=75" loading="lazy" alt=""><div class="cbody"><div class="ctype" style="color:var(--purple)">⚡ Weekly</div><div class="cname">80s Icons</div><div class="cdesc">5 cars from the 1980s.</div><div class="cfoot"><div class="cpts">+1,200</div><div class="chal-timer-live" id="ct-weekly" style="color:var(--purple)">4d 09:00</div></div><div class="cbar"><div class="cbar-f" style="width:60%;background:var(--purple)"></div></div><div class="cprog">3/5 spotted</div></div></div>
+    <div class="ccard"><div class="ctop" style="background:linear-gradient(90deg,var(--gold),var(--orange))"></div><img class="cimg" src="https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=400&q=75" loading="lazy" alt=""><div class="cbody"><div class="ctype" style="color:var(--gold)">👑 Community</div><div class="cname">Nürburgring 24</div><div class="cdesc">24 race cars by Sunday.</div><div class="cfoot"><div class="cpts">+800</div><div class="chal-timer-live" id="ct-comm" style="color:var(--gold)">2d 00:00</div></div><div class="cbar"><div class="cbar-f" style="width:79%;background:var(--gold)"></div></div><div class="cprog">19/24 · 382 members</div></div></div>
+    <div class="ccard"><div class="ctop" style="background:linear-gradient(90deg,var(--green),var(--teal))"></div><img class="cimg" src="https://images.unsplash.com/photo-1555215695-3004980ad54e?w=400&q=75" loading="lazy" alt=""><div class="cbody"><div class="ctype" style="color:var(--green)">✓ Completed</div><div class="cname">German Precision</div><div class="cdesc">Porsche, BMW, AMG.</div><div class="cfoot"><div class="cpts" style="color:var(--green)">+350 ✓</div><div class="ctimer">Done</div></div><div class="cbar"><div class="cbar-f" style="width:100%;background:var(--green)"></div></div><div class="cprog" style="color:var(--green)">Complete!</div></div></div>
+  </div>
+
+  <div class="ph a4" style="margin-top:18px;margin-bottom:10px;">
+    <div class="rh"><div class="rl">Scoreboards</div><button class="ra" onclick="goTo('ranks')">More →</button></div>
+    <div class="btabs" id="hbtabs">
+      <button class="btab active" onclick="switchBoard('hb-global',this,'hbtabs')">🌍 Global</button>
+      <button class="btab" onclick="switchBoard('hb-ireland',this,'hbtabs')">🇮🇪 Ireland</button>
+      <button class="btab" onclick="switchBoard('hb-italian',this,'hbtabs')">🇮🇹 Italian</button>
+      <button class="btab" onclick="switchBoard('hb-80s',this,'hbtabs')">📼 80s</button>
+      <button class="btab" onclick="switchBoard('hb-exotics',this,'hbtabs')">💎 Exotics</button>
+    </div>
+    <div class="card" style="overflow:hidden;margin-top:10px;">
+      <div class="bpanel active" id="hb-global">
+        <div class="brow"><div class="bpos bp-g">1</div><div class="bavi">🦊</div><div class="binfo"><div class="bname">MaxVelocity</div><div class="bsub">94 spots</div></div><div style="text-align:right"><div class="bval">18,420</div><div class="btrend-u">▲ +2</div></div></div>
+        <div class="brow"><div class="bpos bp-s">2</div><div class="bavi">🐎</div><div class="binfo"><div class="bname">Scuderia_Lou</div><div class="bsub">73 spots</div></div><div class="bval">14,880</div></div>
+        <div class="bsep"></div>
+        <div class="brow you"><div class="bpos" style="color:var(--red)">#14</div><div class="bavi" style="background:linear-gradient(135deg,var(--red),var(--red-d));color:#fff;font-size:11px;font-weight:500;" id="h-bavi">MW</div><div class="binfo"><div class="bname">You</div><div class="bsub" id="h-lb-sub">0 spots</div></div><div style="text-align:right"><div class="bval" style="color:var(--red)" id="h-lb-pts">4,820</div><div class="btrend-u">▲ +3 wk</div></div></div>
+      </div>
+      <div class="bpanel" id="hb-ireland"><div class="brow"><div class="bpos bp-g">1</div><div class="bavi">🍀</div><div class="binfo"><div class="bname">DublinDrifter</div><div class="bsub">41 spots</div></div><div class="bval">7,340</div></div><div class="brow"><div class="bpos bp-s">2</div><div class="bavi">⚡</div><div class="binfo"><div class="bname">CorkRacer</div><div class="bsub">33 spots</div></div><div class="bval">5,910</div></div><div class="bsep"></div><div class="brow you"><div class="bpos" style="color:var(--red)">#4</div><div class="bavi" style="background:linear-gradient(135deg,var(--red),var(--red-d));color:#fff;font-size:11px;font-weight:500;">MW</div><div class="binfo"><div class="bname">You</div><div class="bsub">28 spots</div></div><div style="text-align:right"><div class="bval" style="color:var(--red)">4,820</div><div style="font-size:10px;color:var(--green)">Top 10% 🇮🇪</div></div></div></div>
+      <div class="bpanel" id="hb-italian"><div class="bnote">Ferrari · Lamborghini · Pagani · Maserati · Alfa</div><div class="brow"><div class="bpos bp-g">1</div><div class="bavi">🐎</div><div class="binfo"><div class="bname">Scuderia_Lou</div><div class="bsub">29 Italian</div></div><div class="bval">9,200</div></div><div class="bsep"></div><div class="brow you"><div class="bpos" style="color:var(--red)">#8</div><div class="bavi" style="background:linear-gradient(135deg,var(--red),var(--red-d));color:#fff;font-size:11px;font-weight:500;">MW</div><div class="binfo"><div class="bname">You</div><div class="bsub">4 Italian spots</div></div><div class="bval" style="color:var(--red)">1,240</div></div></div>
+      <div class="bpanel" id="hb-80s"><div class="bnote">1980–1989 models only</div><div class="brow"><div class="bpos bp-g">1</div><div class="bavi">📼</div><div class="binfo"><div class="bname">RetroRider_82</div><div class="bsub">17 finds</div></div><div class="bval">4,100</div></div><div class="bsep"></div><div class="brow you"><div class="bpos" style="color:var(--red)">#6</div><div class="bavi" style="background:linear-gradient(135deg,var(--red),var(--red-d));color:#fff;font-size:11px;font-weight:500;">MW</div><div class="binfo"><div class="bname">You</div><div class="bsub">5 eighties</div></div><div class="bval" style="color:var(--red)">980</div></div></div>
+      <div class="bpanel" id="hb-exotics"><div class="bnote">Epic rarity and above</div><div class="brow"><div class="bpos bp-g">1</div><div class="bavi">🦊</div><div class="binfo"><div class="bname">MaxVelocity</div><div class="bsub">6 exotics</div></div><div style="text-align:right"><div class="bval">8,100</div><div class="pill pun" style="font-size:8px;margin-top:3px;">2× Unicorn</div></div></div><div class="bsep"></div><div class="brow you"><div class="bpos" style="color:var(--red)">#11</div><div class="bavi" style="background:linear-gradient(135deg,var(--red),var(--red-d));color:#fff;font-size:11px;font-weight:500;">MW</div><div class="binfo"><div class="bname">You</div><div class="bsub">3 exotics</div></div><div class="bval" style="color:var(--red)">1,880</div></div></div>
+    </div>
+  </div>
+
+  <div class="ph a5" style="margin-top:18px;margin-bottom:10px;"><div class="rh"><div class="rl"><span class="live"></span>Following Feed</div><button class="ra">Discover →</button></div></div>
+  <div class="fi">
+    <div class="fi-hd"><div class="fi-avi">🍀</div><div class="fi-user"><div class="fi-name">DublinDrifter</div><div class="fi-act">spotted an <strong style="color:var(--purple)">Epic</strong> — just now</div></div><div class="fi-time">2m ago</div></div>
+    <div class="fi-car" onclick="openModal({name:'Porsche 911 GT3 RS',sub:'2023 · Germany · Supercar',rarity:'epic',pts:380,hp:'525',prod:'Limited',desc:'The GT3 RS is the most focused 911 ever built for road use. With a naturally aspirated flat-six revving to 9,000 rpm and active aerodynamics borrowed from the 919 Hybrid, it redefines what a road car can be.',img:'https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?w=600&q=85'})">
+      <img src="https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?w=600&q=80" loading="lazy" alt="">
+      <div class="fi-car-body"><div class="fi-car-name">Porsche 911 GT3 RS</div><div class="fi-meta"><span class="pill pe">Epic</span><div class="fi-pts">+380 pts</div><div class="fi-loc">📍 Dublin, IE</div></div></div>
+    </div>
+    <div class="fi-acts">
+      <button class="fi-btn" onclick="toggleLike(this,14)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span>14</span></button>
+      <button class="fi-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>3</button>
+      <button class="fi-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>Share</button>
+    </div>
+    <div class="fi-comment"><strong>Scuderia_Lou:</strong> Nice GT3! Spotted one near you yesterday too 🔥</div>
+  </div>
+  <div class="fi" style="border-bottom:none;">
+    <div class="fi-hd"><div class="fi-avi">🐎</div><div class="fi-user"><div class="fi-name">Scuderia_Lou</div><div class="fi-act">spotted a <strong style="color:var(--gold)">Legendary</strong></div></div><div class="fi-time">1h ago</div></div>
+    <div class="fi-car" onclick="openModal({name:'Ferrari SF90 Stradale',sub:'2023 · Italy · Hypercar',rarity:'legendary',pts:620,hp:'986',prod:'999',desc:'Ferrari\'s most powerful road car ever, combining a twin-turbo V8 with three electric motors. Named for Scuderia Ferrari\'s 90th anniversary. An engineering marvel of the hybrid era.',img:'https://images.unsplash.com/photo-1592198084033-aade902d1aae?w=600&q=85'})">
+      <img src="https://images.unsplash.com/photo-1592198084033-aade902d1aae?w=600&q=80" loading="lazy" alt="">
+      <div class="fi-car-body"><div class="fi-car-name">Ferrari SF90 Stradale</div><div class="fi-meta"><span class="pill pl">Legendary</span><div class="fi-pts">+620 pts</div><div class="fi-loc">📍 Milan, IT</div></div></div>
+    </div>
+    <div class="fi-acts">
+      <button class="fi-btn liked" onclick="toggleLike(this,41)"><svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span>41</span></button>
+      <button class="fi-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>12</button>
+      <button class="fi-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>Share</button>
+    </div>
+    <div style="height:16px;"></div>
+  </div>
+</div><!-- /home -->
+
+<!-- SPOT -->
+<div class="screen" id="s-spot">
+  <div class="vf">
+    <div class="vf-c c-tl"></div><div class="vf-c c-tr"></div><div class="vf-c c-bl"></div><div class="vf-c c-br"></div>
+    <div class="vf-scan" id="vfScan"></div>
+    <img class="prev-img" id="prevImg" alt="">
+    <div class="vf-idle" id="vfIdle">
+      <div class="vf-ring"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>
+      <div><div class="vf-title">Spot a Car</div><div class="vf-sub">Upload or photograph any sport car.<br>AI identifies &amp; scores it instantly.</div></div>
+    </div>
+  </div>
+  <div class="streak-r"><div class="str-l">🔥 Daily Streak</div><div class="str-v" id="strV">7 days</div></div>
+  <div class="spot-btns">
+    <label class="sp-btn" for="fileIn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Upload</label>
+    <input type="file" id="fileIn" accept="image/*" style="display:none" onchange="handleFile(this)">
+    <label class="sp-btn" for="camIn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>Camera</label>
+    <input type="file" id="camIn" accept="image/*" capture="environment" style="display:none" onchange="handleFile(this)">
+  </div>
+  <button class="ident-btn" id="identBtn" disabled onclick="identifyCar()">🔍 &nbsp;IDENTIFY CAR</button>
+  <div class="loader" id="loader"><div class="spin"></div><div class="load-txt" id="loadTxt">Scanning the tarmac...</div></div>
+  <div class="reveal-wrap" id="revealWrap">
+    <div class="reveal-curtain" id="revealCurtain" onclick="revealResult()">
+      <div class="reveal-icon">🔍</div>
+      <div class="reveal-hint">Tap to reveal rarity</div>
+    </div>
+    <div class="res-box">
+      <img class="res-img" id="resImg" src="" alt="">
+      <div class="res-hd"><div><div class="res-name" id="resName">—</div><div class="res-sub" id="resSub">—</div></div><span class="pill" id="resBadge">—</span></div>
+      <div class="res-stats">
+        <div class="rs"><div class="rs-val" id="resHP">—</div><div class="rs-lbl">HP</div></div>
+        <div class="rs"><div class="rs-val" id="resProd">—</div><div class="rs-lbl">Made</div></div>
+        <div class="rs"><div class="rs-val" id="resPts" style="color:var(--gold)">—</div><div class="rs-lbl">Pts</div></div>
+      </div>
+      <div class="res-desc" id="resDesc">—</div>
+      <div class="res-acts">
+        <button class="res-act" onclick="resetSpot()">New Spot</button>
+        <button class="res-act pri" id="saveBtn" onclick="saveToGarage()">Save to Garage ✓</button>
+      </div>
+    </div>
+  </div>
+</div><!-- /spot -->
+
+<!-- GARAGE -->
+<div class="screen" id="s-garage">
+  <div class="ph" style="margin-bottom:10px;"><div class="rh"><div class="rl">My Garage</div><div class="ra" id="garCount">0 cars</div></div></div>
+  <div class="gar-filter-row" id="garFilters">
+    <button class="gf active" onclick="setGarFilter('all',this)">All</button>
+    <button class="gf" onclick="setGarFilter('unicorn',this)">🦄 Unicorn</button>
+    <button class="gf" onclick="setGarFilter('legendary',this)">👑 Legendary</button>
+    <button class="gf" onclick="setGarFilter('epic',this)">⚡ Epic</button>
+    <button class="gf" onclick="setGarFilter('rare',this)">💎 Rare</button>
+    <button class="gf" onclick="setGarFilter('uncommon',this)">🟢 Uncommon</button>
+  </div>
+  <div class="gar-sort-row">
+    <div style="font-size:11px;color:var(--t1);">Sort by</div>
+    <select class="gar-sort-select" id="garSort" onchange="renderGarage()">
+      <option value="recent">Most Recent</option>
+      <option value="pts">Points (high)</option>
+      <option value="rarity">Rarity</option>
+    </select>
+  </div>
+  <div class="gar-grid" id="garGrid">
+    <div class="empty-s"><div class="empty-ico">🏁</div><div class="empty-txt">No cars spotted yet.<br>Get out and hunt!</div></div>
+  </div>
+</div><!-- /garage -->
+
+<!-- MAP -->
+<div class="screen" id="s-map">
+  <div class="ph" style="margin-bottom:12px;"><div class="rh"><div class="rl">Spot Map</div><button class="ra" onclick="locateMe()">📍 Locate Me</button></div></div>
+  <div class="map-wrap">
+    <svg class="map-svg" viewBox="0 0 358 310" xmlns="http://www.w3.org/2000/svg">
+      <rect width="358" height="310" fill="var(--s2)"/>
+      <g stroke="var(--s3)" stroke-width="8" fill="none">
+        <line x1="0" y1="78" x2="358" y2="78"/>
+        <line x1="0" y1="155" x2="358" y2="155"/>
+        <line x1="0" y1="232" x2="358" y2="232"/>
+        <line x1="90" y1="0" x2="90" y2="310"/>
+        <line x1="179" y1="0" x2="179" y2="310"/>
+        <line x1="268" y1="0" x2="268" y2="310"/>
+      </g>
+      <g stroke="var(--s4)" stroke-width="1" fill="none">
+        <line x1="0" y1="78" x2="358" y2="78"/>
+        <line x1="0" y1="155" x2="358" y2="155"/>
+        <line x1="0" y1="232" x2="358" y2="232"/>
+        <line x1="90" y1="0" x2="90" y2="310"/>
+        <line x1="179" y1="0" x2="179" y2="310"/>
+        <line x1="268" y1="0" x2="268" y2="310"/>
+        <line x1="0" y1="310" x2="358" y2="0" opacity=".15"/>
+      </g>
+      <ellipse cx="125" cy="195" rx="28" ry="16" fill="rgba(30,215,96,.07)" stroke="rgba(30,215,96,.14)" stroke-width="1"/>
+      <text x="125" y="198" fill="rgba(30,215,96,.35)" font-size="7" font-family="DM Sans,sans-serif" text-anchor="middle">Park</text>
+      <circle cx="158" cy="136" r="8" fill="var(--purple)" opacity=".9" class="map-spot" onclick="mapTap(158,136,'Porsche 911 GT3 RS','epic','09:14')"/>
+      <circle cx="98" cy="196" r="6" fill="var(--blue)" opacity=".85" class="map-spot" onclick="mapTap(98,196,'BMW M4 CSL','rare','07:52')"/>
+      <circle cx="228" cy="96" r="10" fill="var(--gold)" opacity=".9" class="map-spot" onclick="mapTap(228,96,'Ferrari 488 Pista','legendary','Yesterday')"/>
+      <circle cx="58" cy="254" r="5" fill="var(--green)" opacity=".8" class="map-spot" onclick="mapTap(58,254,'Audi TT RS','uncommon','2d ago')"/>
+      <circle cx="298" cy="214" r="5" fill="var(--green)" opacity=".8" class="map-spot"/>
+      <circle cx="198" cy="254" r="6" fill="var(--blue)" opacity=".8" class="map-spot"/>
+      <g id="user-dot">
+        <circle cx="179" cy="155" r="12" fill="var(--red)" opacity=".18"/>
+        <circle cx="179" cy="155" r="6" fill="var(--red)"/>
+        <circle cx="179" cy="155" r="2.5" fill="#fff"/>
+      </g>
+      <g id="mapTT" opacity="0" style="transition:opacity .2s;">
+        <rect id="ttBg" x="10" y="10" width="130" height="40" rx="7" fill="var(--s0)" stroke="var(--s5)" stroke-width="1"/>
+        <text id="ttName" x="20" y="28" fill="var(--t0)" font-size="11" font-family="DM Sans,sans-serif" font-weight="500">—</text>
+        <text id="ttSub" x="20" y="43" fill="var(--t2)" font-size="9" font-family="DM Mono,monospace">—</text>
+      </g>
+    </svg>
+  </div>
+  <div class="map-filters">
+    <button class="mf-btn active" onclick="togMapF(this)">All</button>
+    <button class="mf-btn" onclick="togMapF(this)">Epic+</button>
+    <button class="mf-btn" onclick="togMapF(this)">Today</button>
+    <button class="mf-btn" onclick="togMapF(this)">Mine</button>
+    <button class="mf-btn" onclick="togMapF(this)">1km</button>
+  </div>
+  <div class="ph" style="margin-bottom:8px;"><div class="rh"><div class="rl">Nearby Spots</div></div></div>
+  <div class="nearby-list">
+    <div class="nb-row" onclick="openModal({name:'Ferrari 488 Pista',sub:'2018 · Italy · Supercar',rarity:'legendary',pts:580,hp:'710',prod:'1,000',desc:'The 488 Pista is Ferrari\'s most track-focused series car. 710 hp and tech borrowed from the FXX K race car make it a legend of its generation.',img:'https://images.unsplash.com/photo-1592198084033-aade902d1aae?w=600&q=85'})">
+      <img class="nb-img" src="https://images.unsplash.com/photo-1592198084033-aade902d1aae?w=200&q=70" loading="lazy" alt="">
+      <div class="nb-info"><div class="nb-name">Ferrari 488 Pista</div><div class="nb-sub"><span class="pill pl" style="font-size:8px;">Legendary</span></div></div>
+      <div class="nb-dist">0.4km</div>
+    </div>
+    <div class="nb-row">
+      <img class="nb-img" src="https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?w=200&q=70" loading="lazy" alt="">
+      <div class="nb-info"><div class="nb-name">Porsche 911 GT3</div><div class="nb-sub"><span class="pill pe" style="font-size:8px;">Epic</span></div></div>
+      <div class="nb-dist">1.2km</div>
+    </div>
+    <div class="nb-row">
+      <img class="nb-img" src="https://images.unsplash.com/photo-1555215695-3004980ad54e?w=200&q=70" loading="lazy" alt="">
+      <div class="nb-info"><div class="nb-name">BMW M4 CSL</div><div class="nb-sub"><span class="pill pr" style="font-size:8px;">Rare</span></div></div>
+      <div class="nb-dist">2.8km</div>
+    </div>
+  </div>
+  <div style="height:16px;"></div>
+</div><!-- /map -->
+
+<!-- RANKS -->
+<div class="screen" id="s-ranks">
+  <div class="ph" style="margin-bottom:12px;">
+    <div class="rh"><div class="rl">Scoreboards</div></div>
+    <div class="btabs" id="rbtabs">
+      <button class="btab active" onclick="switchBoard('rb-global',this,'rbtabs')">🌍 Global</button>
+      <button class="btab" onclick="switchBoard('rb-ireland',this,'rbtabs')">🇮🇪 Ireland</button>
+      <button class="btab" onclick="switchBoard('rb-italian',this,'rbtabs')">🇮🇹 Italian</button>
+      <button class="btab" onclick="switchBoard('rb-80s',this,'rbtabs')">📼 80s</button>
+      <button class="btab" onclick="switchBoard('rb-exotics',this,'rbtabs')">💎 Exotics</button>
+    </div>
+  </div>
+  <div class="card" style="margin:0 16px;overflow:hidden;">
+    <div class="bpanel active" id="rb-global">
+      <div class="brow"><div class="bpos bp-g">1</div><div class="bavi">🦊</div><div class="binfo"><div class="bname">MaxVelocity</div><div class="bsub">94 spots · Elite</div></div><div style="text-align:right"><div class="bval">18,420</div><div class="btrend-u">▲ +2</div></div></div>
+      <div class="brow"><div class="bpos bp-s">2</div><div class="bavi">🐎</div><div class="binfo"><div class="bname">Scuderia_Lou</div><div class="bsub">73 spots</div></div><div style="text-align:right"><div class="bval">14,880</div><div class="btrend-u">▲ +1</div></div></div>
+      <div class="brow"><div class="bpos bp-b">3</div><div class="bavi">👑</div><div class="binfo"><div class="bname">NürburgKing</div><div class="bsub">58 spots · DE</div></div><div style="text-align:right"><div class="bval">11,200</div><div class="btrend-d">▼ −1</div></div></div>
+      <div class="brow"><div class="bpos">4</div><div class="bavi">⚡</div><div class="binfo"><div class="bname">Gearhead_99</div><div class="bsub">44 spots</div></div><div class="bval">8,650</div></div>
+      <div class="brow"><div class="bpos">5</div><div class="bavi">🌸</div><div class="binfo"><div class="bname">CarmaQueen</div><div class="bsub">38 spots</div></div><div class="bval">6,300</div></div>
+      <div class="brow"><div class="bpos">6</div><div class="bavi">🔥</div><div class="binfo"><div class="bname">TopFuelTed</div><div class="bsub">29 spots</div></div><div class="bval">4,100</div></div>
+      <div class="bsep"></div>
+      <div class="brow you"><div class="bpos" style="color:var(--red)">#14</div><div class="bavi" style="background:linear-gradient(135deg,var(--red),var(--red-d));color:#fff;font-size:11px;font-weight:500;" id="r-bavi">MW</div><div class="binfo"><div class="bname">You</div><div class="bsub" id="r-lb-sub">0 spots · Racer</div></div><div style="text-align:right"><div class="bval" style="color:var(--red)" id="r-lb-pts">4,820</div><div class="btrend-u">▲ +3 wk</div></div></div>
+    </div>
+    <div class="bpanel" id="rb-ireland"><div class="brow"><div class="bpos bp-g">1</div><div class="bavi">🍀</div><div class="binfo"><div class="bname">DublinDrifter</div><div class="bsub">41 spots</div></div><div class="bval">7,340</div></div><div class="brow"><div class="bpos bp-s">2</div><div class="bavi">⚡</div><div class="binfo"><div class="bname">CorkRacer</div><div class="bsub">33 spots</div></div><div class="bval">5,910</div></div><div class="brow"><div class="bpos bp-b">3</div><div class="bavi">🎯</div><div class="binfo"><div class="bname">GalwayGT</div><div class="bsub">22 spots</div></div><div class="bval">3,400</div></div><div class="bsep"></div><div class="brow you"><div class="bpos" style="color:var(--red)">#4</div><div class="bavi" style="background:linear-gradient(135deg,var(--red),var(--red-d));color:#fff;font-size:11px;font-weight:500;">MW</div><div class="binfo"><div class="bname">You · Dublin</div><div class="bsub">28 spots</div></div><div style="text-align:right"><div class="bval" style="color:var(--red)">4,820</div><div style="font-size:10px;color:var(--green)">Top 10% 🇮🇪</div></div></div></div>
+    <div class="bpanel" id="rb-italian"><div class="bnote">🇮🇹 Ferrari · Lamborghini · Pagani · Maserati · Alfa</div><div class="brow"><div class="bpos bp-g">1</div><div class="bavi">🐎</div><div class="binfo"><div class="bname">Scuderia_Lou</div><div class="bsub">29 Italian</div></div><div class="bval">9,200</div></div><div class="brow"><div class="bpos bp-s">2</div><div class="bavi">🐂</div><div class="binfo"><div class="bname">Raging_Bull_88</div><div class="bsub">21 spots</div></div><div class="bval">6,400</div></div><div class="bsep"></div><div class="brow you"><div class="bpos" style="color:var(--red)">#8</div><div class="bavi" style="background:linear-gradient(135deg,var(--red),var(--red-d));color:#fff;font-size:11px;font-weight:500;">MW</div><div class="binfo"><div class="bname">You</div><div class="bsub">4 Italian</div></div><div class="bval" style="color:var(--red)">1,240</div></div></div>
+    <div class="bpanel" id="rb-80s"><div class="bnote">📼 1980–1989 models only</div><div class="brow"><div class="bpos bp-g">1</div><div class="bavi">📼</div><div class="binfo"><div class="bname">RetroRider_82</div><div class="bsub">17 finds</div></div><div class="bval">4,100</div></div><div class="brow"><div class="bpos bp-s">2</div><div class="bavi">🎸</div><div class="binfo"><div class="bname">Synth_Wheeler</div><div class="bsub">12 finds</div></div><div class="bval">2,900</div></div><div class="bsep"></div><div class="brow you"><div class="bpos" style="color:var(--red)">#6</div><div class="bavi" style="background:linear-gradient(135deg,var(--red),var(--red-d));color:#fff;font-size:11px;font-weight:500;">MW</div><div class="binfo"><div class="bname">You</div><div class="bsub">5 eighties</div></div><div class="bval" style="color:var(--red)">980</div></div></div>
+    <div class="bpanel" id="rb-exotics"><div class="bnote">💎 Epic rarity and above</div><div class="brow"><div class="bpos bp-g">1</div><div class="bavi">🦊</div><div class="binfo"><div class="bname">MaxVelocity</div><div class="bsub">6 exotics</div></div><div style="text-align:right"><div class="bval">8,100</div><div class="pill pun" style="font-size:8px;margin-top:3px;">2× Unicorn</div></div></div><div class="brow"><div class="bpos bp-s">2</div><div class="bavi">💎</div><div class="binfo"><div class="bname">UltraRareUno</div><div class="bsub">4 exotics</div></div><div class="bval">5,600</div></div><div class="bsep"></div><div class="brow you"><div class="bpos" style="color:var(--red)">#11</div><div class="bavi" style="background:linear-gradient(135deg,var(--red),var(--red-d));color:#fff;font-size:11px;font-weight:500;">MW</div><div class="binfo"><div class="bname">You</div><div class="bsub">3 exotics</div></div><div class="bval" style="color:var(--red)">1,880</div></div></div>
+  </div>
+</div><!-- /ranks -->
+
+<!-- STATS -->
+<div class="screen" id="s-stats">
+  <div class="ph" style="margin-bottom:12px;"><div class="rh"><div class="rl">My Dashboard</div></div></div>
+  <div class="sg-grid">
+    <div class="sg"><div class="sg-val" id="st-pts" style="color:var(--gold)">4,820</div><div class="sg-lbl">Total Points</div></div>
+    <div class="sg"><div class="sg-val" id="st-spots" style="color:var(--blue)">0</div><div class="sg-lbl">Spotted</div></div>
+    <div class="sg"><div class="sg-val" id="st-rank" style="color:var(--red);font-family:'Rajdhani',sans-serif;font-size:22px;">Racer</div><div class="sg-lbl">Rank</div></div>
+    <div class="sg"><div class="sg-val" style="color:var(--orange)">7</div><div class="sg-lbl">Day Streak</div></div>
+    <div class="sg"><div class="sg-val" id="st-rarest" style="color:var(--purple);font-size:18px;">—</div><div class="sg-lbl">Rarest Find</div></div>
+    <div class="sg"><div class="sg-val" id="st-epics" style="color:var(--red)">0</div><div class="sg-lbl">Epic+ Finds</div></div>
+  </div>
+  <div class="dlist" style="margin-bottom:14px;">
+    <div class="drow"><div class="drow-ico" style="background:var(--gold-lo)">🏆</div><div class="drow-info"><div class="drow-label">Global Ranking</div><div class="drow-sub">12,400 spotters</div></div><div class="drow-r"><div class="drow-val" style="color:var(--gold)">#14</div><div class="drow-prev">↑ 2 this week</div></div><div class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div></div>
+    <div class="drow"><div class="drow-ico" style="background:var(--grn-lo)">🇮🇪</div><div class="drow-info"><div class="drow-label">Ireland Ranking</div><div class="drow-sub">Top 10% nationally</div></div><div class="drow-r"><div class="drow-val" style="color:var(--green)">#4</div><div class="drow-prev">Dublin</div></div><div class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div></div>
+    <div class="drow"><div class="drow-ico" style="background:var(--prp-lo)">💎</div><div class="drow-info"><div class="drow-label">Exotics Ranking</div><div class="drow-sub">Epic+ spots only</div></div><div class="drow-r"><div class="drow-val" style="color:var(--purple)">#11</div><div class="drow-prev">3 exotics</div></div><div class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div></div>
+  </div>
+  <div class="rar-card"><div class="rar-title">Rarity Breakdown</div><div id="rarBreak"></div></div>
+
+  <!-- Streak Calendar -->
+  <div class="streak-cal">
+    <div class="cal-head">
+      <div class="cal-title">Spot Calendar</div>
+      <div class="cal-streak-num" id="cal-streak">🔥 7 days</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px;">
+      <div class="cal-day-lbl">Mo</div><div class="cal-day-lbl">Tu</div><div class="cal-day-lbl">We</div>
+      <div class="cal-day-lbl">Th</div><div class="cal-day-lbl">Fr</div><div class="cal-day-lbl">Sa</div><div class="cal-day-lbl">Su</div>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+    <div class="cal-legend">
+      <div class="cl-item"><div class="cl-dot" style="background:var(--orange)"></div>Spotted</div>
+      <div class="cl-item"><div class="cl-dot" style="background:var(--red)"></div>Today</div>
+      <div class="cl-item"><div class="cl-dot" style="background:var(--s3)"></div>Missed</div>
+    </div>
+  </div>
+
+  <!-- Map Access -->
+  <div class="map-access-btn" onclick="goTo('map')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+    <div class="map-access-label">View Spot Map</div>
+    <div class="map-access-count" id="mapSpotCount">6 pins</div>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;color:var(--t3)"><polyline points="9 18 15 12 9 6"/></svg>
+  </div>
+
+  <!-- Spot Timeline -->
+  <div class="ph" style="margin-bottom:10px;"><div class="rh"><div class="rl">Spot History</div></div></div>
+  <div class="timeline" id="spotTimeline">
+    <div style="padding:24px;text-align:center;color:var(--t2);font-size:13px;">No spots yet — start hunting!</div>
+  </div>
+</div><!-- /stats -->
+</div><!-- /screens -->
+
+<!-- BOTTOM NAV -->
+<div class="bnav">
+  <button class="nb active" id="nav-home" onclick="goTo('home')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/></svg>Home</button>
+  <button class="nb" id="nav-explore" onclick="goTo('explore')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Explore</button>
+  <button class="nb-fab" onclick="goTo('spot')"><div class="fab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12"/></svg></div><div class="fab-lbl">Spot</div></button>
+  <button class="nb" id="nav-garage" onclick="goTo('garage')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>Garage</button>
+  <button class="nb" id="nav-profile" onclick="goTo('profile')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile</button>
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="modal-bg" id="modalBg" onclick="closeMod(event)">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <img class="modal-img" id="mImg" src="" alt="">
+    <div class="modal-body">
+      <div class="modal-title" id="mName">—</div>
+      <div class="modal-sub" id="mSub">—</div>
+      <div class="modal-sg">
+        <div class="modal-s"><div class="ms-val" id="mHP">—</div><div class="ms-lbl">HP</div></div>
+        <div class="modal-s"><div class="ms-val" id="mProd">—</div><div class="ms-lbl">Made</div></div>
+        <div class="modal-s"><div class="ms-val" id="mPts" style="color:var(--gold)">—</div><div class="ms-lbl">Pts</div></div>
+      </div>
+      <div class="modal-desc" id="mDesc">—</div>
+      <button class="modal-share-btn" onclick="openShare()">SHARE THIS SPOT 🔗</button>
+      <button class="modal-close-btn" onclick="closeMod()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- SHARE MODAL -->
+<div class="share-bg" id="shareBg">
+  <div class="share-wrap">
+    <div class="share-x" onclick="closeShare()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+    <div class="share-card">
+      <img id="scImg" src="" alt="" style="width:100%;height:195px;object-fit:cover;display:block;">
+      <div class="share-overlay"></div>
+      <div class="share-content">
+        <div class="sc-logo">TRO<b>T</b>L</div>
+        <div class="sc-car" id="scCar">—</div>
+        <div class="sc-meta"><span class="pill" id="scPill">—</span><div class="sc-pts" id="scPts">—</div></div>
+      </div>
+    </div>
+    <div class="share-acts">
+      <button class="share-act" onclick="closeShare()">Cancel</button>
+      <button class="share-act" onclick="copyLink()">Copy Link</button>
+      <button class="share-act pri" onclick="copyLink()">Share Card</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST STACK -->
+<div class="toast-stack" id="toastStack"></div>
+
+<!-- ── EXPLORE ── -->
+<div class="screen" id="s-explore">
+  <div class="ph" style="margin-bottom:10px;"><div class="rh"><div class="rl">Explore Cars</div><div class="ra" id="explore-count-lbl">— cars</div></div></div>
+  <div class="explore-search-wrap">
+    <svg class="search-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input class="explore-search" id="exploreSearch" type="text" placeholder="Search make, model, era..." oninput="filterExplore()">
+  </div>
+  <div class="explore-filters" id="exploreFilters">
+    <button class="ef active" onclick="setExploreFilter(all,this)">All</button>
+    <button class="ef" onclick="setExploreFilter(unicorn,this)">🦄 Unicorn</button>
+    <button class="ef" onclick="setExploreFilter(legendary,this)">👑 Legendary</button>
+    <button class="ef" onclick="setExploreFilter(epic,this)">⚡ Epic</button>
+    <button class="ef" onclick="setExploreFilter(rare,this)">💎 Rare</button>
+    <button class="ef" onclick="setExploreFilter(italian,this)">🇮🇹 Italian</button>
+    <button class="ef" onclick="setExploreFilter(german,this)">🇩🇪 German</button>
+    <button class="ef" onclick="setExploreFilter(80s,this)">📼 80s Era</button>
+    <button class="ef" onclick="setExploreFilter(hypercar,this)">🚀 Hypercar</button>
+    <button class="ef" onclick="setExploreFilter(jdm,this)">🇯🇵 JDM</button>
+  </div>
+  <div class="explore-sort">
+    <div class="explore-sort-lbl">Sort by</div>
+    <select class="explore-sort-select" id="exploreSort" onchange="filterExplore()">
+      <option value="pts">Points (high)</option>
+      <option value="rarity">Rarity</option>
+      <option value="recent">Most Recent</option>
+      <option value="hp">Horsepower</option>
+    </select>
+  </div>
+  <div class="explore-grid" id="exploreGrid"></div>
+</div><!-- /explore -->
+
+<!-- NOTIFICATION PANEL -->
+<div class="notif-overlay" id="notifOverlay" onclick="closeNotifPanel()"></div>
+<div class="notif-panel" id="notifPanel">
+  <div class="notif-panel-head">
+    <div class="notif-panel-title">Notifications</div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <button class="notif-clear" onclick="markAllRead()">Mark all read</button>
+      <div class="notif-close" onclick="closeNotifPanel()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+    </div>
+  </div>
+  <div class="notif-list" id="notifList"></div>
+</div>
+
+<!-- PWA INSTALL BANNER -->
+<div class="pwa-banner" id="pwaBanner">
+  <div class="pwa-icon">TR<span style="color:rgba(255,255,255,.6)">TL</span></div>
+  <div class="pwa-text">
+    <div class="pwa-title">Add Trotl to Home Screen</div>
+    <div class="pwa-sub">Instant access, works offline, no app store needed</div>
+  </div>
+  <button class="pwa-install" onclick="installPWA()">INSTALL</button>
+  <button class="pwa-dismiss" onclick="dismissPWA()">✕</button>
+</div>
+
+
+<!-- ── PROFILE ── -->
+<div class="screen" id="s-profile">
+  <div class="profile-hero a1">
+    <div class="profile-cover">
+      <div class="profile-cover-pattern"></div>
+      <div class="profile-avi-wrap"><div class="profile-avi-lg" id="pf-avi">MW</div></div>
+    </div>
+    <div class="profile-body">
+      <div class="profile-username" id="pf-username">Max Wheeler</div>
+      <div class="profile-country" id="pf-country">🇮🇪 Ireland</div>
+      <div class="profile-rank-bar">
+        <div class="prb-head">
+          <div class="prb-rank" id="pf-rank">Racer</div>
+          <div class="prb-next" id="pf-rank-next">820 pts to Connoisseur</div>
+        </div>
+        <div class="prb-bar"><div class="prb-fill" id="pf-rank-fill" style="width:64%"></div></div>
+      </div>
+    </div>
+    <div class="profile-stats-row">
+      <div class="ps"><div class="ps-val" id="pf-pts" style="color:var(--gold)">4,820</div><div class="ps-lbl">Points</div></div>
+      <div class="ps"><div class="ps-val" id="pf-spots" style="color:var(--blue)">0</div><div class="ps-lbl">Spotted</div></div>
+      <div class="ps"><div class="ps-val" id="pf-streak" style="color:var(--orange)">7</div><div class="ps-lbl">Streak</div></div>
+    </div>
+  </div>
+
+  <!-- Edit Profile -->
+  <div class="pref-section a2">
+    <div class="pref-title">Profile</div>
+    <div class="pref-card">
+      <div style="padding:14px 16px;border-bottom:1px solid var(--s4);">
+        <div style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--t2);margin-bottom:8px;">Username</div>
+        <input class="edit-input" id="pf-edit-name" type="text" maxlength="20" placeholder="Your username">
+        <div style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--t2);margin-bottom:8px;">Country</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:0;">
+          <div class="ob-ctry" onclick="pfSelCtry(this,'🇮🇪 Ireland')">🇮🇪 Ireland</div>
+          <div class="ob-ctry" onclick="pfSelCtry(this,'🇬🇧 UK')">🇬🇧 UK</div>
+          <div class="ob-ctry" onclick="pfSelCtry(this,'🇮🇹 Italy')">🇮🇹 Italy</div>
+          <div class="ob-ctry" onclick="pfSelCtry(this,'🇩🇪 Germany')">🇩🇪 Germany</div>
+          <div class="ob-ctry" onclick="pfSelCtry(this,'🇺🇸 USA')">🇺🇸 USA</div>
+          <div class="ob-ctry" onclick="pfSelCtry(this,'🇫🇷 France')">🇫🇷 France</div>
+          <div class="ob-ctry" onclick="pfSelCtry(this,'🇯🇵 Japan')">🇯🇵 Japan</div>
+          <div class="ob-ctry" onclick="pfSelCtry(this,'🌍 Other')">🌍 Other</div>
+        </div>
+      </div>
+      <div style="padding:14px 16px;">
+        <div style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--t2);margin-bottom:8px;">Niche Leaderboards</div>
+        <div class="niches-grid">
+          <div class="niche-chip" onclick="togPfNiche(this,'italian')" id="nc-italian">🇮🇹 Italian Cars</div>
+          <div class="niche-chip" onclick="togPfNiche(this,'german')" id="nc-german">🇩🇪 German</div>
+          <div class="niche-chip" onclick="togPfNiche(this,'80s')" id="nc-80s">📼 80s Era</div>
+          <div class="niche-chip" onclick="togPfNiche(this,'hypercar')" id="nc-hypercar">🚀 Hypercars</div>
+          <div class="niche-chip" onclick="togPfNiche(this,'jdm')" id="nc-jdm">🇯🇵 JDM</div>
+          <div class="niche-chip" onclick="togPfNiche(this,'muscle')" id="nc-muscle">🦅 Muscle Cars</div>
+        </div>
+        <button class="save-btn" onclick="saveProfile()">SAVE CHANGES</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings -->
+  <div class="pref-section a3">
+    <div class="pref-title">Settings</div>
+    <div class="pref-card">
+      <div class="pref-row" onclick="toggleTheme()">
+        <div class="pref-ico" style="background:var(--gold-lo)">☀️</div>
+        <div class="pref-label">Light Mode</div>
+        <div class="toggle-wrap" id="theme-toggle"><div class="toggle-knob"></div></div>
+      </div>
+      <div class="pref-row" onclick="toast('🔔','Notifications','Push notifications enabled')">
+        <div class="pref-ico" style="background:var(--blu-lo)">🔔</div>
+        <div class="pref-label">Push Notifications</div>
+        <div class="toggle-wrap on"><div class="toggle-knob"></div></div>
+      </div>
+      <div class="pref-row" onclick="toast('📍','Location','Location tracking enabled for Map')">
+        <div class="pref-ico" style="background:var(--grn-lo)">📍</div>
+        <div class="pref-label">Location Access</div>
+        <div class="toggle-wrap on"><div class="toggle-knob"></div></div>
+      </div>
+      <div class="pref-row" onclick="goTo('map')">
+        <div class="pref-ico" style="background:var(--prp-lo)">🗺</div>
+        <div class="pref-label">Spot Map</div>
+        <div class="pref-val">Open</div>
+        <div class="pref-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+      </div>
+      <div class="pref-row" onclick="installPWA()">
+        <div class="pref-ico" style="background:var(--red-lo)">📱</div>
+        <div class="pref-label">Install App</div>
+        <div class="pref-val">Add to Home</div>
+        <div class="pref-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Danger zone -->
+  <div class="pref-section a4" style="padding-bottom:16px;">
+    <div class="pref-title">Data</div>
+    <div class="pref-card">
+      <div class="pref-row" onclick="exportData()">
+        <div class="pref-ico" style="background:var(--blu-lo)">📤</div>
+        <div class="pref-label">Export Garage Data</div>
+        <div class="pref-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+      </div>
+      <div class="pref-row" onclick="resetData()">
+        <div class="pref-ico" style="background:var(--red-lo)">🗑</div>
+        <div class="pref-label" style="color:var(--red)">Reset All Data</div>
+        <div class="pref-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+      </div>
+    </div>
+  </div>
+</div><!-- /profile -->
+</div><!-- /shell -->
+<script>
+/* ══════════ DATA & STATE ══════════ */
+const RARITY={
+  unicorn:  {label:'Unicorn',  cls:'pun',dot:'#e8001d',pts:[800,2000],order:0},
+  legendary:{label:'Legendary',cls:'pl', dot:'#f0b429',pts:[400,799], order:1},
+  epic:     {label:'Epic',     cls:'pe', dot:'#a87fff',pts:[200,399], order:2},
+  rare:     {label:'Rare',     cls:'pr', dot:'#3d9eff',pts:[100,199], order:3},
+  uncommon: {label:'Uncommon', cls:'pu', dot:'#1ed760',pts:[50,99],   order:4},
+  common:   {label:'Common',   cls:'pc', dot:'#666',   pts:[10,49],   order:5},
+};
+const RANKS=[{n:'Scout',min:0,next:200},{n:'Spotter',min:200,next:600},{n:'Hunter',min:600,next:1500},{n:'Racer',min:1500,next:4000},{n:'Connoisseur',min:4000,next:10000},{n:'Elite',min:10000,next:null}];
+const CAR_IMGS={ferrari:'https://images.unsplash.com/photo-1592198084033-aade902d1aae?w=400&q=75',porsche:'https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?w=400&q=75',lamborghini:'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=400&q=75',bmw:'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=400&q=75',default:'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=400&q=75'};
+const LOAD_MSGS=['Scanning the tarmac...','Reading the bodylines...','Checking rarity index...','Consulting the car oracle...','Cross-referencing VIN data...'];
+
+const EXPLORE_DB=[
+  {make:'Bugatti',model:'Chiron Super Sport 300+',year:'2019',country:'France',category:'Hypercar',hp:1578,rarity:'unicorn',era:'modern',img:'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=400&q=75',pts:1800},
+  {make:'Pagani',model:'Huayra BC',year:'2016',country:'Italy',category:'Hypercar',hp:789,rarity:'unicorn',era:'modern',img:'https://images.unsplash.com/photo-1592198084033-aade902d1aae?w=400&q=75',pts:1600},
+  {make:'Ferrari',model:'LaFerrari Aperta',year:'2016',country:'Italy',category:'Hypercar',hp:950,rarity:'legendary',era:'modern',img:'https://images.unsplash.com/photo-1592198084033-aade902d1aae?w=400&q=75',pts:720},
+  {make:'McLaren',model:'P1 GTR',year:'2015',country:'UK',category:'Hypercar',hp:986,rarity:'legendary',era:'modern',img:'https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?w=400&q=75',pts:680},
+  {make:'Lamborghini',model:'Sián FKP 37',year:'2020',country:'Italy',category:'Hypercar',hp:819,rarity:'legendary',era:'modern',img:'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=400&q=75',pts:650},
+  {make:'Mercedes',model:'AMG One',year:'2023',country:'Germany',category:'Hypercar',hp:1063,rarity:'legendary',era:'modern',img:'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=400&q=75',pts:700},
+  {make:'Aston Martin',model:'Valkyrie',year:'2022',country:'UK',category:'Hypercar',hp:1160,rarity:'legendary',era:'modern',img:'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=400&q=75',pts:690},
+  {make:'Porsche',model:'911 GT3 RS',year:'2023',country:'Germany',category:'Supercar',hp:525,rarity:'epic',era:'modern',img:'https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?w=400&q=75',pts:380},
+  {make:'Ferrari',model:'SF90 Stradale',year:'2023',country:'Italy',category:'Supercar',hp:986,rarity:'epic',era:'modern',img:'https://images.unsplash.com/photo-1592198084033-aade902d1aae?w=400&q=75',pts:360},
+  {make:'Lamborghini',model:'Huracán STO',year:'2021',country:'Italy',category:'Supercar',hp:640,rarity:'epic',era:'modern',img:'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=400&q=75',pts:340},
+  {make:'Ford',model:'GT',year:'2017',country:'USA',category:'Supercar',hp:647,rarity:'epic',era:'modern',img:'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=400&q=75',pts:310},
+  {make:'BMW',model:'M4 CSL',year:'2022',country:'Germany',category:'Sports Car',hp:543,rarity:'rare',era:'modern',img:'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=400&q=75',pts:175},
+  {make:'Ferrari',model:'Testarossa',year:'1984',country:'Italy',category:'Classic',hp:390,rarity:'rare',era:'80s',img:'https://images.unsplash.com/photo-1592198084033-aade902d1aae?w=400&q=75',pts:160},
+  {make:'Lamborghini',model:'Countach LP5000',year:'1982',country:'Italy',category:'Classic',hp:375,rarity:'rare',era:'80s',img:'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=400&q=75',pts:155},
+  {make:'Porsche',model:'959',year:'1986',country:'Germany',category:'Classic',hp:450,rarity:'rare',era:'80s',img:'https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?w=400&q=75',pts:150},
+  {make:'Honda',model:'NSX Type R',year:'2022',country:'Japan',category:'Sports Car',hp:600,rarity:'rare',era:'modern',img:'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=400&q=75',pts:130},
+  {make:'Dodge',model:'Viper ACR',year:'2016',country:'USA',category:'Sports Car',hp:645,rarity:'rare',era:'modern',img:'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=400&q=75',pts:140},
+  {make:'Nissan',model:'GT-R R35',year:'2023',country:'Japan',category:'Sports Car',hp:565,rarity:'uncommon',era:'modern',img:'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=400&q=75',pts:80},
+  {make:'Toyota',model:'GR Supra',year:'2023',country:'Japan',category:'Sports Car',hp:382,rarity:'uncommon',era:'modern',img:'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=400&q=75',pts:70},
+  {make:'Alfa Romeo',model:'4C Spider',year:'2020',country:'Italy',category:'Sports Car',hp:237,rarity:'uncommon',era:'modern',img:'https://images.unsplash.com/photo-1592198084033-aade902d1aae?w=400&q=75',pts:65},
+];
+
+let G={pts:4820,streak:7,garage:[],pending:null,imgB64:null,username:'Max Wheeler',country:'🇮🇪 Ireland',niches:[],isLight:false,notifsSeen:false,garFilter:'all'};
+try{const s=localStorage.getItem('trotl_v5');if(s){const d=JSON.parse(s);Object.assign(G,d);}}catch(e){}
+function save(){try{localStorage.setItem('trotl_v5',JSON.stringify({pts:G.pts,streak:G.streak,garage:G.garage,username:G.username,country:G.country,niches:G.niches,isLight:G.isLight,garFilter:G.garFilter}));}catch(e){}}
+function el(id){return document.getElementById(id);}
+function getRank(p){return[...RANKS].reverse().find(r=>p>=r.min)||RANKS[0];}
+
+/* ══════════ FEATURE 4: MICRO-INTERACTIONS ══════════ */
+function addRipple(btn,cls){
+  if(!btn)return;
+  const r=document.createElement('span');r.className=cls;
+  const size=Math.max(btn.offsetWidth,btn.offsetHeight);
+  r.style.cssText=`width:${size}px;height:${size}px;left:${btn.offsetWidth/2-size/2}px;top:${btn.offsetHeight/2-size/2}px;`;
+  btn.appendChild(r);setTimeout(()=>r.remove(),550);
+}
+document.querySelectorAll('.nb').forEach(b=>b.addEventListener('click',()=>addRipple(b,'nb-ripple')));
+document.querySelector('.fab')?.addEventListener('click',function(){addRipple(this,'fab-ripple');});
+
+function animateRings(){
+  const p=G.pts,rank=getRank(p),next=RANKS.find(r=>r.min>p);
+  const pct=next?Math.round((p-rank.min)/(rank.next-rank.min)*100):100;
+  const circ=201,targetOff=circ-(circ*pct/100);
+  const rg=el('rg-rank');
+  if(rg){rg.style.strokeDashoffset='201';requestAnimationFrame(()=>requestAnimationFrame(()=>{rg.style.strokeDashoffset=targetOff;}));}
+  const rgPts=el('rg-pts');
+  if(rgPts){rgPts.style.strokeDashoffset='201';requestAnimationFrame(()=>requestAnimationFrame(()=>{rgPts.style.strokeDashoffset='72';}));}
+  tickUp('h-pts',0,G.pts,1200);
+  tickUp('h-spots',0,G.garage.length,800);
+}
+function tickUp(id,from,to,dur){
+  const e=el(id);if(!e||to===0){if(e)e.textContent='0';return;}
+  const steps=28,interval=dur/steps;let i=0;
+  const t=setInterval(()=>{
+    i++;const val=Math.round(from+(to-from)*(i/steps));
+    e.textContent=id==='h-pts'?val.toLocaleString():val;
+    if(i>=steps)clearInterval(t);
+  },interval);
+}
+function tapFeedback(e){if(!e)return;e.classList.add('tap-active');setTimeout(()=>e.classList.remove('tap-active'),220);}
+
+/* ══════════ ONBOARDING ══════════ */
+let obCountry='',obNiches=[];
+function checkOnboard(){
+  if(localStorage.getItem('trotl_ob')){el('onboard').classList.add('ob-hidden');applyTheme();updateUI();setTimeout(animateRings,400);}
+}
+function obNext(step){
+  const cur=el('ob'+step);cur.classList.add('ob-exit');
+  setTimeout(()=>{cur.classList.remove('ob-active','ob-exit');el('ob'+(step+1)).classList.add('ob-active');},300);
+}
+function selCtry(node,val){document.querySelectorAll('.ob-ctry').forEach(c=>c.classList.remove('sel'));node.classList.add('sel');obCountry=val;checkOb2();}
+function checkOb2(){const name=el('ob-name')?.value.trim();const btn=el('ob2-btn');if(btn)btn.disabled=!(name&&obCountry);}
+function togNiche(node){node.classList.toggle('sel');}
+function finishOnboard(){
+  G.username=el('ob-name')?.value.trim()||'Spotter';G.country=obCountry||'🌍 Global';
+  G.niches=Array.from(document.querySelectorAll('.ob-chip.sel')).map(c=>c.dataset?.niche||'');
+  save();localStorage.setItem('trotl_ob','1');
+  el('onboard').classList.add('ob-hidden');applyTheme();updateUI();
+  setTimeout(animateRings,400);
+  setTimeout(()=>toast('🏁','Welcome to Trotl!','Spot your first car to earn points'),700);
+  setTimeout(()=>toast('📍','Spot Map loaded',G.country+' spots are live'),2500);
+  setTimeout(()=>toast('🔥','Challenge ready','Prancing Horse Hunt · 6h left'),4200);
+  setTimeout(showPWABanner,10000);
+}
+checkOnboard();
+
+/* ══════════ THEME ══════════ */
+function applyTheme(){
+  el('shell').classList.toggle('light',G.isLight);
+  const tt=el('theme-toggle');if(tt)tt.classList.toggle('on',G.isLight);
+}
+function toggleTheme(){G.isLight=!G.isLight;applyTheme();save();toast(G.isLight?'☀️':'🌙',G.isLight?'Light mode on':'Dark mode on','');}
+applyTheme();
+
+/* ══════════ NAVIGATION ══════════ */
+let cur='home';
+function goTo(id){
+  if(id===cur)return;
+  el('s-'+cur).classList.remove('active');
+  el('s-'+id).classList.add('active');
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
+  const nb=el('nav-'+id);if(nb)nb.classList.add('active');
+  cur=id;
+  if(id==='garage')renderGarage();
+  if(id==='stats'){renderStats();renderCalendar();renderTimeline();}
+  if(id==='explore')renderExplore();
+  if(id==='profile')renderProfile();
+  if(id==='home')setTimeout(animateRings,200);
+  updateUI();
+}
+
+/* ══════════ UI UPDATE ══════════ */
+function updateUI(){
+  const p=G.pts,rank=getRank(p),next=RANKS.find(r=>r.min>p);
+  const pct=next?Math.round((p-rank.min)/(rank.next-rank.min)*100):100;
+  const circ=201,rOff=circ-(circ*pct/100);
+  const rg=el('rg-rank');if(rg)rg.style.strokeDashoffset=rOff;
+  const parts=G.username.trim().split(' ');
+  const fn=parts[0],ln=parts.slice(1).join(' ');
+  const hn=el('h-name');if(hn)hn.innerHTML=fn+(ln?` <span>${ln}</span>`:'');
+  const init=((fn[0]||'')+(ln?ln[0]:'')).toUpperCase();
+  [el('tb-avi'),el('h-bavi'),el('r-bavi'),el('pf-avi')].forEach(a=>{if(a)a.textContent=init||'MW';});
+  el('tb-sub').textContent=G.country||'Spot · Earn · Dominate';
+  const hpts=el('h-pts');if(hpts)hpts.textContent=p.toLocaleString();
+  const hrk=el('h-rank');if(hrk)hrk.textContent=rank.n;
+  const hrp=el('h-rank-pct');if(hrp)hrp.textContent=pct+'% to next';
+  const hsv=el('h-streak-v');if(hsv)hsv.textContent=G.streak;
+  el('h-spots').textContent=G.garage.length;
+  el('h-epics').textContent=G.garage.filter(c=>['epic','legendary','unicorn'].includes(c.rarity)).length;
+  el('h-lb-pts').textContent=p.toLocaleString();
+  el('h-lb-sub').textContent=G.garage.length+' spots';
+  const rlb=el('r-lb-pts');if(rlb)rlb.textContent=p.toLocaleString();
+  const rsub=el('r-lb-sub');if(rsub)rsub.textContent=G.garage.length+' spots · '+rank.n;
+  el('strV').textContent=G.streak+' day'+(G.streak!==1?'s':'');
+}
+
+/* ══════════ BOARD TABS ══════════ */
+function switchBoard(pId,btn,tabsId){
+  el(tabsId).querySelectorAll('.btab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
+  el(pId).parentElement.querySelectorAll('.bpanel').forEach(p=>p.classList.remove('active'));el(pId).classList.add('active');
+}
+
+/* ══════════ LIKES ══════════ */
+function toggleLike(btn,base){
+  btn.classList.toggle('liked');const sp=btn.querySelector('span');const c=parseInt(sp.textContent);
+  sp.textContent=btn.classList.contains('liked')?c+1:c-1;
+  btn.querySelector('svg').setAttribute('fill',btn.classList.contains('liked')?'currentColor':'none');
+  if(btn.classList.contains('liked'))tapFeedback(btn);
+}
+
+/* ══════════ SPOT / AI ══════════ */
+function handleFile(inp){
+  const file=inp.files[0];if(!file)return;
+  const r=new FileReader();
+  r.onload=e=>{
+    G.imgB64=e.target.result.split(',')[1];
+    const img=el('prevImg');img.src=e.target.result;img.style.display='block';
+    el('vfIdle').style.display='none';el('vfScan').style.display='none';
+    el('identBtn').disabled=false;el('revealWrap').classList.remove('show');
+  };
+  r.readAsDataURL(file);
+}
+async function identifyCar(){
+  if(!G.imgB64)return;
+  el('identBtn').disabled=true;el('revealWrap').classList.remove('show');el('loader').classList.add('show');
+  let mi=0;const mt=setInterval(()=>{const l=el('loadTxt');if(l)l.textContent=LOAD_MSGS[++mi%LOAD_MSGS.length];},2000);
+  const prompt=`You are a world-class automotive expert. Analyze this image carefully.
+Return ONLY raw JSON (no markdown):
+{"make":"string","model":"string","year":"string","country":"string","category":"Supercar|Hypercar|Sports Car|Classic|Exotic|Muscle Car|GT|Other","hp":number_or_0,"units_made":"string or Unknown","rarity":"common|uncommon|rare|epic|legendary|unicorn","rarity_reason":"one sentence","description":"2 sentences about why this car is special","is_car":true_or_false}
+Rarity: unicorn=under 50 made or race-only, legendary=under 500, epic=500-2000, rare=2000-10000, uncommon=10000-50000, common=50000+. is_car=false if no car visible.`;
+  try{
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:'image/jpeg',data:G.imgB64}},{type:'text',text:prompt}]}]})});
+    clearInterval(mt);
+    const data=await resp.json();
+    const txt=data.content.map(b=>b.text||'').join('').replace(/```json|```/g,'').trim();
+    const car=JSON.parse(txt);
+    el('loader').classList.remove('show');
+    if(!car.is_car){showResult('No Car Detected','Upload a clear photo of a car','common',0,'—','—','No sport car was identified. Try a clearer photo.');G.pending=null;el('identBtn').disabled=false;return;}
+    const r=RARITY[car.rarity]?car.rarity:'common';
+    const[mn,mx]=RARITY[r].pts;const pts=Math.floor(Math.random()*(mx-mn+1))+mn;
+    G.pending={...car,rarity:r,pts,date:new Date().toLocaleDateString('en-IE')};
+    showResult(`${car.make} ${car.model}`,`${car.year} · ${car.country} · ${car.category}`,r,pts,car.hp>0?car.hp.toLocaleString():'—',car.units_made||'Unknown',car.description+' '+car.rarity_reason);
+    el('resImg').src='data:image/jpeg;base64,'+G.imgB64;
+    triggerFlash();el('revealCurtain').classList.remove('gone');
+    addNotif({type:'spot',ico:'🎯',title:'Car identified!',sub:car.make+' '+car.model+' — tap to reveal',time:'Just now',unread:true,bg:'var(--prp-lo)'});
+  }catch(err){
+    clearInterval(mt);el('loader').classList.remove('show');
+    showResult('Error','Could not identify — try again','common',0,'—','—','Make sure you have a clear photo of a car.');
+  }
+  el('identBtn').disabled=false;
+}
+function showResult(name,sub,rarity,pts,hp,prod,desc){
+  el('resName').textContent=name;el('resSub').textContent=sub;
+  const b=el('resBadge');b.className='pill '+(RARITY[rarity]?.cls||'pc');b.textContent=RARITY[rarity]?.label||rarity;
+  el('resHP').textContent=hp;el('resProd').textContent=prod;
+  el('resPts').textContent=pts?'+'+pts:'0';el('resDesc').textContent=desc;
+  el('revealWrap').classList.add('show');
+}
+function revealResult(){
+  el('revealCurtain').classList.add('gone');
+  if(G.pending){const rm=RARITY[G.pending.rarity];toast(G.pending.rarity==='unicorn'?'🦄':G.pending.rarity==='legendary'?'👑':'🎯',rm.label+' spotted!',G.pending.make+' '+G.pending.model+' — +'+G.pending.pts+' pts');}
+}
+function triggerFlash(){const f=el('flashEl');f.classList.remove('go');void f.offsetWidth;f.classList.add('go');setTimeout(()=>f.classList.remove('go'),600);}
+function showPts(pts){el('ptsN').textContent='+'+pts;const b=el('ptsPop');b.classList.remove('go');void b.offsetWidth;b.classList.add('go');setTimeout(()=>b.classList.remove('go'),2400);}
+function resetSpot(){
+  G.imgB64=null;G.pending=null;
+  el('prevImg').style.display='none';el('vfIdle').style.display='flex';el('vfScan').style.display='block';
+  el('identBtn').disabled=true;el('revealWrap').classList.remove('show');
+  el('fileIn').value='';el('camIn').value='';
+}
+function saveToGarage(){
+  if(!G.pending)return;
+  G.garage.unshift({...G.pending,imgB64:G.imgB64});
+  G.pts+=G.pending.pts;G.streak=Math.min(G.streak+1,365);
+  save();updateUI();showPts(G.pending.pts);
+  toast('✅','Saved to Garage!',G.pending.make+' '+G.pending.model);
+  addMapDot(G.pending.rarity);checkAchievements(G.pending);
+  G.pending=null;setTimeout(()=>{resetSpot();goTo('garage');},2600);
+}
+
+/* ══════════ FEATURE 5: GARAGE WITH FILTERS ══════════ */
+let garFilter='all';
+function setGarFilter(f,btn){
+  garFilter=f;document.querySelectorAll('.gf').forEach(b=>b.classList.remove('active'));btn.classList.add('active');tapFeedback(btn);renderGarage();
+}
+function getCarImg(car){const m=(car.make||'').toLowerCase();for(const k of Object.keys(CAR_IMGS)){if(m.includes(k))return CAR_IMGS[k];}return CAR_IMGS.default;}
+function renderGarage(){
+  const grid=el('garGrid');
+  let data=[...G.garage];
+  if(garFilter!=='all')data=data.filter(c=>c.rarity===garFilter);
+  const sort=el('garSort')?.value||'recent';
+  if(sort==='pts')data.sort((a,b)=>b.pts-a.pts);
+  else if(sort==='rarity')data.sort((a,b)=>RARITY[a.rarity].order-RARITY[b.rarity].order);
+  const cnt=el('garCount');if(cnt)cnt.textContent=data.length+' car'+(data.length!==1?'s':'');
+  if(!data.length){
+    const isFiltered=garFilter!=='all';
+    grid.innerHTML=`<div class="empty-s"><div class="empty-ico">${isFiltered?'🔍':'🏁'}</div><div class="empty-txt">${isFiltered?'No '+RARITY[garFilter]?.label+' cars yet.<br>Keep hunting!':'No cars spotted yet.<br><span style="color:var(--red);cursor:pointer;" onclick="goTo(\'explore\')">Browse cars to spot →</span>'}</div></div>`;
+    return;
+  }
+  grid.innerHTML=data.map(c=>{
+    const rm=RARITY[c.rarity]||RARITY.common;
+    const src=c.imgB64?`data:image/jpeg;base64,${c.imgB64}`:getCarImg(c);
+    const sn=(c.make+' '+c.model).replace(/'/g,'&#39;');
+    const ss=((c.year||'')+'·'+(c.country||'')+'·'+(c.category||'')).replace(/'/g,'&#39;');
+    const sd=(c.description||'').replace(/'/g,'&#39;').substring(0,130);
+    return`<div class="gcard" style="border-color:${rm.dot}22" onclick="tapFeedback(this);openModal({name:'${sn}',sub:'${ss}',rarity:'${c.rarity}',pts:${c.pts},hp:'${c.hp||'—'}',prod:'${c.units_made||'Unknown'}',desc:'${sd}',img:'${src}'})">
+      <img src="${src}" onerror="this.style.display='none'" loading="lazy" alt="">
+      <div class="gcard-body">
+        <div class="gcard-name">${c.make} ${c.model}</div>
+        <div style="margin-bottom:5px"><span class="pill ${rm.cls}" style="font-size:9px;">${rm.label}</span></div>
+        <div class="gcard-foot"><div class="gcard-pts" style="color:${rm.dot}">+${c.pts}</div><div class="gcard-date">${c.date}</div></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ══════════ STATS + STREAK CALENDAR + TIMELINE ══════════ */
+function renderStats(){
+  const p=G.pts;
+  el('st-pts').textContent=p.toLocaleString();el('st-spots').textContent=G.garage.length;
+  el('st-rank').textContent=getRank(p).n;
+  el('st-epics').textContent=G.garage.filter(c=>['epic','legendary','unicorn'].includes(c.rarity)).length;
+  const order=['unicorn','legendary','epic','rare','uncommon','common'];
+  const rarest=G.garage.reduce((b,c)=>(!b||order.indexOf(c.rarity)<order.indexOf(b.rarity))?c:b,null);
+  el('st-rarest').textContent=rarest?RARITY[rarest.rarity].label:'—';
+  const counts={};G.garage.forEach(c=>{counts[c.rarity]=(counts[c.rarity]||0)+1;});
+  const max=Math.max(1,...Object.values(counts));
+  el('rarBreak').innerHTML=order.map(r=>{
+    const cnt=counts[r]||0,rm=RARITY[r];
+    return`<div class="rar-row"><div class="rar-dot" style="background:${rm.dot}"></div><div class="rar-name" style="color:${rm.dot}">${rm.label}</div><div class="rar-bw"><div class="rar-bf" style="width:${Math.round(cnt/max*100)}%;background:${rm.dot}"></div></div><div class="rar-cnt">${cnt}</div></div>`;
+  }).join('');
+  const msc=el('mapSpotCount');if(msc)msc.textContent=(6+G.garage.length)+' pins';
+  const cs=el('cal-streak');if(cs)cs.textContent='🔥 '+G.streak+' day'+(G.streak!==1?'s':'');
+}
+function renderCalendar(){
+  const grid=el('calGrid');if(!grid)return;
+  const today=new Date();
+  const spotDates=new Set(G.garage.map(c=>c.date));
+  // Show last 28 days (4 weeks)
+  const days=[];
+  const startDate=new Date(today);startDate.setDate(today.getDate()-27);
+  // Pad to Monday start
+  const startDay=startDate.getDay();const padDays=(startDay===0?6:startDay-1);
+  for(let i=0;i<padDays;i++)days.push({type:'empty',num:''});
+  for(let i=0;i<28;i++){
+    const d=new Date(startDate);d.setDate(startDate.getDate()+i);
+    const isToday=d.toDateString()===today.toDateString();
+    const dateStr=d.toLocaleDateString('en-IE');
+    const isSpotted=spotDates.has(dateStr)||(i>=21&&i<21+G.streak);// simulate streak for demo
+    const isPast=d<today&&!isToday;
+    let type=isToday?'today':isSpotted?'spotted':isPast?'missed':'future';
+    days.push({type,num:d.getDate()});
+  }
+  grid.innerHTML=days.map(d=>`<div class="cal-day ${d.type}">${d.type!=='empty'?d.num:''}</div>`).join('');
+}
+function renderTimeline(){
+  const tl=el('spotTimeline');if(!tl)return;
+  if(!G.garage.length){tl.innerHTML='<div style="padding:24px;text-align:center;color:var(--t2);font-size:13px;">No spots yet — start hunting!</div>';return;}
+  tl.innerHTML=G.garage.slice(0,10).map((c,i)=>{
+    const rm=RARITY[c.rarity]||RARITY.common;
+    const src=c.imgB64?`data:image/jpeg;base64,${c.imgB64}`:getCarImg(c);
+    const sn=(c.make+' '+c.model).replace(/'/g,'&#39;');
+    const ss=((c.year||'')+'·'+(c.country||'')+'·'+(c.category||'')).replace(/'/g,'&#39;');
+    const sd=(c.description||'').replace(/'/g,'&#39;').substring(0,120);
+    return`<div class="tl-item">
+      <div class="tl-line-col">
+        <div class="tl-dot" style="background:${rm.dot}"></div>
+        <div class="tl-line"></div>
+      </div>
+      <div class="tl-content" onclick="openModal({name:'${sn}',sub:'${ss}',rarity:'${c.rarity}',pts:${c.pts},hp:'${c.hp||'—'}',prod:'${c.units_made||'Unknown'}',desc:'${sd}',img:'${src}'})">
+        <div class="tl-car-name">${c.make} ${c.model}</div>
+        <div class="tl-meta">
+          <span class="pill ${rm.cls}" style="font-size:8px;">${rm.label}</span>
+          <div class="tl-pts" style="color:${rm.dot}">+${c.pts} pts</div>
+          <div class="tl-date">${c.date}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ══════════ FEATURE 5: EXPLORE ══════════ */
+let exploreFilter='all',exploreSearch='';
+function renderExplore(){
+  const q=exploreSearch.toLowerCase();
+  const sortBy=el('exploreSort')?.value||'pts';
+  let data=[...EXPLORE_DB];
+  const rarities=['unicorn','legendary','epic','rare','uncommon','common'];
+  if(exploreFilter!=='all'){
+    if(rarities.includes(exploreFilter))data=data.filter(c=>c.rarity===exploreFilter);
+    else if(exploreFilter==='italian')data=data.filter(c=>c.country==='Italy');
+    else if(exploreFilter==='german')data=data.filter(c=>c.country==='Germany');
+    else if(exploreFilter==='80s')data=data.filter(c=>c.era==='80s');
+    else if(exploreFilter==='hypercar')data=data.filter(c=>c.category==='Hypercar');
+    else if(exploreFilter==='jdm')data=data.filter(c=>c.country==='Japan');
+  }
+  if(q)data=data.filter(c=>(c.make+' '+c.model+' '+c.country+' '+c.year).toLowerCase().includes(q));
+  if(sortBy==='pts')data.sort((a,b)=>b.pts-a.pts);
+  else if(sortBy==='rarity')data.sort((a,b)=>RARITY[a.rarity].order-RARITY[b.rarity].order);
+  else if(sortBy==='recent')data.sort((a,b)=>parseInt(b.year)-parseInt(a.year));
+  else if(sortBy==='hp')data.sort((a,b)=>b.hp-a.hp);
+  const lbl=el('explore-count-lbl');if(lbl)lbl.textContent=data.length+' cars';
+  const grid=el('exploreGrid');if(!grid)return;
+  if(!data.length){grid.innerHTML='<div class="explore-empty">No cars match your search.</div>';return;}
+  grid.innerHTML=data.map(c=>{
+    const rm=RARITY[c.rarity]||RARITY.common;
+    const sn=(c.make+' '+c.model).replace(/'/g,'&#39;');
+    const ss=(c.year+' · '+c.country+' · '+c.category).replace(/'/g,'&#39;');
+    return`<div class="ecard" onclick="tapFeedback(this);openModal({name:'${sn}',sub:'${ss}',rarity:'${c.rarity}',pts:${c.pts},hp:'${c.hp}',prod:'Limited',desc:'The ${sn} produces ${c.hp} hp from ${c.country} and was first made in ${c.year}. One of the most coveted ${c.category.toLowerCase()} models in its segment.',img:'${c.img}'})">
+      <img src="${c.img}" loading="lazy" alt="" onerror="this.style.display='none'">
+      <div class="ecard-body">
+        <div class="ecard-name">${c.make} ${c.model}</div>
+        <div style="margin-bottom:5px"><span class="pill ${rm.cls}" style="font-size:8px;">${rm.label}</span></div>
+        <div class="ecard-meta"><div class="ecard-pts" style="color:${rm.dot}">+${c.pts} pts</div><div class="ecard-country">${c.country}</div></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function setExploreFilter(f,btn){
+  exploreFilter=f;document.querySelectorAll('.ef').forEach(b=>b.classList.remove('active'));btn.classList.add('active');tapFeedback(btn);renderExplore();
+}
+function filterExplore(){exploreSearch=el('exploreSearch')?.value||'';renderExplore();}
+
+/* ══════════ MAP ══════════ */
+const dotColors={unicorn:'#e8001d',legendary:'#f0b429',epic:'#a87fff',rare:'#3d9eff',uncommon:'#1ed760',common:'#666'};
+function mapTap(cx,cy,name,rarity,time){
+  const tt=el('mapTT'),bg=el('ttBg'),nn=el('ttName'),sub=el('ttSub');
+  const bx=Math.min(cx-10,215),by=Math.max(cy-55,5);
+  bg.setAttribute('x',bx);bg.setAttribute('y',by);
+  nn.setAttribute('x',bx+10);nn.setAttribute('y',by+18);
+  sub.setAttribute('x',bx+10);sub.setAttribute('y',by+33);
+  const rm=RARITY[rarity]||RARITY.common;
+  nn.textContent=name;nn.setAttribute('fill',rm.dot);
+  sub.textContent=rm.label+' · '+time;
+  tt.style.opacity='1';setTimeout(()=>{tt.style.opacity='0';},3000);
+}
+function addMapDot(rarity){
+  const svg=document.querySelector('.map-svg');if(!svg)return;
+  const cx=40+Math.random()*278,cy=20+Math.random()*270;
+  const r=6,c=dotColors[rarity]||'#666';
+  const circle=document.createElementNS('http://www.w3.org/2000/svg','circle');
+  circle.setAttribute('cx',cx);circle.setAttribute('cy',cy);circle.setAttribute('r',r);
+  circle.setAttribute('fill',c);circle.setAttribute('opacity','0.9');circle.classList.add('map-spot');
+  svg.insertBefore(circle,el('user-dot'));
+}
+function togMapF(btn){document.querySelectorAll('.mf-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');tapFeedback(btn);toast('📍','Filter applied',btn.textContent+' spots showing');}
+function locateMe(){toast('📍','Location updated','Using '+G.country);}
+
+/* ══════════ DETAIL MODAL ══════════ */
+let _md=null;
+function openModal(data){
+  _md=data;el('mImg').src=data.img||'';el('mName').textContent=data.name;el('mSub').textContent=data.sub;
+  el('mHP').textContent=data.hp||'—';el('mProd').textContent=data.prod||'—';
+  el('mPts').textContent=data.pts?'+'+data.pts:'—';el('mDesc').textContent=data.desc||'';
+  el('modalBg').classList.add('open');
+}
+function closeMod(e){if(!e||e.target===el('modalBg'))el('modalBg').classList.remove('open');}
+
+/* ══════════ SHARE MODAL ══════════ */
+function openShare(){
+  if(!_md)return;
+  el('scImg').src=_md.img||'';el('scCar').textContent=_md.name;
+  const b=el('scPill');b.className='pill '+(RARITY[_md.rarity]?.cls||'pc');b.textContent=RARITY[_md.rarity]?.label||'—';
+  el('scPts').textContent=_md.pts?'+'+_md.pts+' pts':'';
+  el('shareBg').classList.add('open');
+}
+function closeShare(){el('shareBg').classList.remove('open');}
+function copyLink(){
+  const url='trotl.app/spot/'+Math.random().toString(36).slice(2,8);
+  if(navigator.clipboard)navigator.clipboard.writeText('https://'+url).catch(()=>{});
+  toast('🔗','Link copied!',url);closeShare();
+}
+
+/* ══════════ FEATURE 6: PWA ══════════ */
+let deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',(e)=>{e.preventDefault();deferredPrompt=e;setTimeout(showPWABanner,3000);});
+function showPWABanner(){
+  if(localStorage.getItem('trotl_pwa'))return;
+  const b=el('pwaBanner');if(b)b.classList.add('show');
+}
+function dismissPWA(){
+  const b=el('pwaBanner');
+  if(b){b.classList.remove('show');}
+  localStorage.setItem('trotl_pwa','1');
+}
+async function installPWA(){
+  dismissPWA();
+  if(deferredPrompt){deferredPrompt.prompt();const{outcome}=await deferredPrompt.userChoice;if(outcome==='accepted')toast('📱','Trotl installed!','Find it on your home screen');deferredPrompt=null;}
+  else toast('📱','Add to Home Screen','Tap Share → "Add to Home Screen" in your browser');
+}
+if(!localStorage.getItem('trotl_ob')){}
+else if(!localStorage.getItem('trotl_pwa')&&!window.matchMedia('(display-mode: standalone)').matches){setTimeout(showPWABanner,14000);}
+
+/* ══════════ FEATURE 7: NOTIFICATIONS ══════════ */
+const BASE_NOTIFS=[
+  {id:'n1',type:'challenge',ico:'⚡',title:'Challenge almost complete!',sub:'80s Icons: 3/5 — spot 2 more by Thursday',time:'5m ago',unread:true,bg:'var(--prp-lo)'},
+  {id:'n2',type:'rival',ico:'🏎',title:'NürburgKing spotted nearby',sub:'BMW M4 CSL · Rare · 1.2km away',time:'12m ago',unread:true,bg:'var(--blu-lo)'},
+  {id:'n3',type:'social',ico:'🍀',title:'DublinDrifter liked your spot',sub:'Porsche 911 GT3 RS · Dublin',time:'1h ago',unread:true,bg:'var(--grn-lo)'},
+  {id:'n4',type:'rank',ico:'📈',title:'You moved up in Ireland',sub:'Now #4 nationally — top 10%',time:'2h ago',unread:false,bg:'var(--gold-lo)'},
+  {id:'n5',type:'challenge',ico:'👑',title:'Community challenge: 79%',sub:'Nürburgring 24 — 5 more needed by Sunday',time:'3h ago',unread:false,bg:'var(--gold-lo)'},
+  {id:'n6',type:'achievement',ico:'🏆',title:'Achievement unlocked!',sub:'7-Day Streak — Keep it up!',time:'1d ago',unread:false,bg:'var(--orn-lo)'},
+  {id:'n7',type:'rival',ico:'🐎',title:'Scuderia_Lou spotted a Unicorn',sub:'Pagani Zonda Cinque · Milan, IT',time:'1d ago',unread:false,bg:'var(--red-lo)'},
+];
+let localNotifs=[...BASE_NOTIFS];
+function renderNotifs(){
+  const list=el('notifList');if(!list)return;
+  const unread=localNotifs.filter(n=>n.unread),read=localNotifs.filter(n=>!n.unread);
+  let html='';
+  if(unread.length)html+=`<div class="notif-section-label">New · ${unread.length}</div>`+unread.map(notifRow).join('');
+  if(read.length)html+=`<div class="notif-section-label">Earlier</div>`+read.map(notifRow).join('');
+  if(!localNotifs.length)html='<div class="notif-empty">You\'re all caught up! 🏁</div>';
+  list.innerHTML=html;
+  const count=unread.length;
+  const badge=el('bellBadge'),pip=el('bellPip');
+  if(badge){badge.style.display=count>0?'block':'none';badge.textContent=count;}
+  if(pip)pip.style.display=count>0?'block':'none';
+}
+function notifRow(n){
+  return`<div class="notif-item ${n.unread?'unread':''}" onclick="readNotif('${n.id}')">
+    <div class="notif-ico" style="background:${n.bg||'var(--s2)'}">${n.ico}</div>
+    <div class="notif-body"><div class="notif-title">${n.title}</div><div class="notif-sub">${n.sub}</div><div class="notif-time">${n.time}</div></div>
+  </div>`;
+}
+function readNotif(id){localNotifs=localNotifs.map(n=>n.id===id?{...n,unread:false}:n);renderNotifs();}
+function markAllRead(){localNotifs=localNotifs.map(n=>({...n,unread:false}));renderNotifs();toast('✓','All notifications read','');}
+function openNotifPanel(){el('notifPanel').classList.add('open');el('notifOverlay').classList.add('open');renderNotifs();}
+function closeNotifPanel(){el('notifPanel').classList.remove('open');el('notifOverlay').classList.remove('open');}
+function addNotif(data){localNotifs.unshift({id:'n'+Date.now(),unread:true,bg:'var(--s2)',...data});renderNotifs();}
+
+/* ══════════ ACHIEVEMENT CHECKER ══════════ */
+function checkAchievements(car){
+  const g=G.garage;
+  if(g.length===1)addNotif({type:'achievement',ico:'🎯',title:'First Spot!',sub:'The journey begins. Keep hunting!',time:'Just now',bg:'var(--gold-lo)'});
+  if(g.length===5)addNotif({type:'achievement',ico:'🔥',title:'5 Cars Spotted',sub:'You\'re on a roll!',time:'Just now',bg:'var(--orn-lo)'});
+  if(g.length===10)addNotif({type:'achievement',ico:'🏎',title:'10 Cars in the Garage',sub:'A true spotter. Respect.',time:'Just now',bg:'var(--blu-lo)'});
+  if(['legendary','unicorn'].includes(car.rarity))addNotif({type:'achievement',ico:'👑',title:RARITY[car.rarity].label+' find!',sub:car.make+' '+car.model+' is extraordinary.',time:'Just now',bg:'var(--gold-lo)'});
+  if(G.streak===7)addNotif({type:'achievement',ico:'🏆',title:'7-Day Streak!',sub:'Consistency is your superpower.',time:'Just now',bg:'var(--orn-lo)'});
+}
+
+/* ══════════ PROFILE ══════════ */
+let pfCountry='';
+function renderProfile(){
+  const p=G.pts,rank=getRank(p),next=RANKS.find(r=>r.min>p);
+  const pct=next?Math.round((p-rank.min)/(rank.next-rank.min)*100):100;
+  const parts=G.username.trim().split(' ');
+  const fn=parts[0],ln=parts.slice(1).join(' ');
+  const init=((fn[0]||'')+(ln?ln[0]:'')).toUpperCase();
+  const avi=el('pf-avi');if(avi)avi.textContent=init||'MW';
+  const pu=el('pf-username');if(pu)pu.textContent=G.username;
+  const pc=el('pf-country');if(pc)pc.textContent=G.country;
+  const pr=el('pf-rank');if(pr)pr.textContent=rank.n;
+  const prn=el('pf-rank-next');
+  if(prn)prn.textContent=next?(rank.next-p).toLocaleString()+' pts to '+RANKS[RANKS.indexOf(rank)+1]?.n:'Max rank!';
+  const prf=el('pf-rank-fill');if(prf)prf.style.width=pct+'%';
+  const pp=el('pf-pts');if(pp)pp.textContent=p.toLocaleString();
+  const ps=el('pf-spots');if(ps)ps.textContent=G.garage.length;
+  const pst=el('pf-streak');if(pst)pst.textContent=G.streak;
+  // Pre-fill edit fields
+  const en=el('pf-edit-name');if(en)en.value=G.username;
+  pfCountry=G.country;
+  // Mark current country
+  document.querySelectorAll('#s-profile .ob-ctry').forEach(c=>{
+    c.classList.toggle('sel',c.textContent.trim()===G.country);
+  });
+  // Mark niches
+  ['italian','german','80s','hypercar','jdm','muscle'].forEach(n=>{
+    const chip=el('nc-'+n);
+    if(chip)chip.classList.toggle('on',G.niches.includes(n));
+  });
+  // Theme toggle
+  const tt=el('theme-toggle');if(tt)tt.classList.toggle('on',G.isLight);
+}
+function pfSelCtry(node,val){
+  document.querySelectorAll('#s-profile .ob-ctry').forEach(c=>c.classList.remove('sel'));
+  node.classList.add('sel');pfCountry=val;
+}
+function togPfNiche(node,val){node.classList.toggle('on');}
+function saveProfile(){
+  const name=el('pf-edit-name')?.value.trim();
+  if(name)G.username=name;
+  if(pfCountry)G.country=pfCountry;
+  G.niches=Array.from(document.querySelectorAll('#s-profile .niche-chip.on')).map(c=>{
+    const id=c.id?.replace('nc-','');return id||'';
+  }).filter(Boolean);
+  save();updateUI();renderProfile();
+  toast('✅','Profile saved!','Changes applied across the app');
+}
+function exportData(){
+  const data={username:G.username,country:G.country,pts:G.pts,streak:G.streak,garage:G.garage.map(c=>({make:c.make,model:c.model,rarity:c.rarity,pts:c.pts,date:c.date}))};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='trotl-garage.json';a.click();
+  URL.revokeObjectURL(url);
+  toast('📤','Garage exported!','trotl-garage.json downloaded');
+}
+function resetData(){
+  if(!confirm('Reset all data? This cannot be undone.'))return;
+  localStorage.clear();location.reload();
+}
+
+/* ══════════ LIVE CHALLENGE TIMERS ══════════ */
+function updateTimers(){
+  const now=new Date();
+  const midnight=new Date(now);midnight.setHours(23,59,59,0);
+  const dailySecs=Math.max(0,Math.floor((midnight-now)/1000));
+  const el_d=el('ct-daily');
+  if(el_d){const h=Math.floor(dailySecs/3600),m=Math.floor((dailySecs%3600)/60),s=dailySecs%60;el_d.textContent=`${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;}
+  const thursday=new Date(now);thursday.setDate(now.getDate()+(4-now.getDay()+7)%7);thursday.setHours(23,59,59,0);
+  const weeklySecs=Math.max(0,Math.floor((thursday-now)/1000));
+  const el_w=el('ct-weekly');
+  if(el_w){const d=Math.floor(weeklySecs/86400),h=Math.floor((weeklySecs%86400)/3600),m=Math.floor((weeklySecs%3600)/60);el_w.textContent=`${d}d ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;}
+  const sunday=new Date(now);sunday.setDate(now.getDate()+(7-now.getDay())%7);sunday.setHours(23,59,59,0);
+  const commSecs=Math.max(0,Math.floor((sunday-now)/1000));
+  const el_c=el('ct-comm');
+  if(el_c){const d=Math.floor(commSecs/86400),h=Math.floor((commSecs%86400)/3600),m=Math.floor((commSecs%3600)/60);el_c.textContent=`${d}d ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;}
+}
+setInterval(updateTimers,1000);updateTimers();
+
+/* ══════════ TOASTS ══════════ */
+function toast(ico,title,sub,dur=3800){
+  const stack=el('toastStack');
+  const t=document.createElement('div');t.className='toast tin';
+  t.innerHTML=`<div class="toast-ico">${ico}</div><div class="toast-text"><div class="toast-title">${title}</div>${sub?`<div class="toast-sub">${sub}</div>`:''}</div>`;
+  stack.appendChild(t);
+  setTimeout(()=>{t.classList.remove('tin');t.classList.add('tout');setTimeout(()=>t.remove(),300);},dur);
+}
+
+/* ══════════ INIT ══════════ */
+updateUI();renderNotifs();
+if(localStorage.getItem('trotl_ob')){
+  setTimeout(()=>toast('🏎','NürburgKing nearby','BMW M4 CSL · Rare · 1.2km away'),2500);
+  setTimeout(()=>toast('⚡','80s Icons: 3/5','Spot 2 more before Thursday!'),6500);
+  setTimeout(()=>toast('👑','Rival activity','Scuderia_Lou spotted a Unicorn in Milan'),11500);
+}
+</script>
+
+</body>
+</html>
