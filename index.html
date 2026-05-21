@@ -450,23 +450,7 @@ body{font-family:'DM Sans',sans-serif;color:#e8e8ea;}
 .explore-empty{grid-column:1/-1;padding:48px 24px;text-align:center;color:var(--t2);font-size:13px;}
 .explore-count{padding:0 16px 8px;font-size:11px;color:var(--t2);font-family:"DM Mono",monospace;}
 
-/* ═══ FEATURE 6: PWA INSTALL BANNER ═══ */
-.pwa-banner{
-  position:absolute;bottom:var(--nav-h,58px);left:0;right:0;z-index:250;
-  background:linear-gradient(135deg,var(--s1),var(--s2));
-  border-top:1px solid var(--s5);
-  padding:14px 18px;
-  display:flex;align-items:center;gap:12px;
-  transform:translateY(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);
-}
-.pwa-banner.show{transform:none;}
-.pwa-icon{width:44px;height:44px;border-radius:12px;background:var(--red);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:"Rajdhani",sans-serif;font-size:14px;font-weight:700;letter-spacing:1px;color:#fff;}
-.pwa-text{flex:1;}
-.pwa-title{font-size:13px;font-weight:500;color:var(--t0);margin-bottom:2px;}
-.pwa-sub{font-size:11px;color:var(--t1);}
-.pwa-install{padding:8px 16px;background:var(--red);border:none;border-radius:8px;color:#fff;font-family:"Barlow Condensed","DM Sans",sans-serif;font-size:12px;font-weight:700;letter-spacing:1.5px;cursor:pointer;flex-shrink:0;transition:all .18s;}
-.pwa-install:hover{filter:brightness(1.1);}
-.pwa-dismiss{width:28px;height:28px;border-radius:50%;background:none;border:none;color:var(--t2);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+
 
 /* ═══ FEATURE 7: NOTIFICATION CENTRE ═══ */
 .notif-panel{
@@ -1124,16 +1108,7 @@ body{font-family:'DM Sans',sans-serif;color:#e8e8ea;}
   <div class="notif-list" id="notifList"></div>
 </div>
 
-<!-- PWA INSTALL BANNER -->
-<div class="pwa-banner" id="pwaBanner">
-  <div class="pwa-icon">TR<span style="color:rgba(255,255,255,.6)">TL</span></div>
-  <div class="pwa-text">
-    <div class="pwa-title">Add Trotl to Home Screen</div>
-    <div class="pwa-sub">Instant access, works offline, no app store needed</div>
-  </div>
-  <button class="pwa-install" onclick="installPWA()">INSTALL</button>
-  <button class="pwa-dismiss" onclick="dismissPWA()">✕</button>
-</div>
+
 
 
 <!-- ── PROFILE ── -->
@@ -1220,12 +1195,7 @@ body{font-family:'DM Sans',sans-serif;color:#e8e8ea;}
         <div class="pref-val">Open</div>
         <div class="pref-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
       </div>
-      <div class="pref-row" onclick="installPWA()">
-        <div class="pref-ico" style="background:var(--red-lo)">📱</div>
-        <div class="pref-label">Install App</div>
-        <div class="pref-val">Add to Home</div>
-        <div class="pref-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
-      </div>
+
     </div>
   </div>
 
@@ -1344,7 +1314,6 @@ function finishOnboard(){
   setTimeout(()=>toast('🏁','Welcome to Trotl!','Spot your first car to earn points'),700);
   setTimeout(()=>toast('📍','Spot Map loaded',G.country+' spots are live'),2500);
   setTimeout(()=>toast('🔥','Challenge ready','Prancing Horse Hunt · 6h left'),4200);
-  setTimeout(showPWABanner,10000);
 }
 checkOnboard();
 
@@ -1676,24 +1645,7 @@ function copyLink(){
 }
 
 /* ══════════ FEATURE 6: PWA ══════════ */
-let deferredPrompt=null;
-window.addEventListener('beforeinstallprompt',(e)=>{e.preventDefault();deferredPrompt=e;setTimeout(showPWABanner,3000);});
-function showPWABanner(){
-  if(localStorage.getItem('trotl_pwa'))return;
-  const b=el('pwaBanner');if(b)b.classList.add('show');
-}
-function dismissPWA(){
-  const b=el('pwaBanner');
-  if(b){b.classList.remove('show');}
-  localStorage.setItem('trotl_pwa','1');
-}
-async function installPWA(){
-  dismissPWA();
-  if(deferredPrompt){deferredPrompt.prompt();const{outcome}=await deferredPrompt.userChoice;if(outcome==='accepted')toast('📱','Trotl installed!','Find it on your home screen');deferredPrompt=null;}
-  else toast('📱','Add to Home Screen','Tap Share → "Add to Home Screen" in your browser');
-}
-if(!localStorage.getItem('trotl_ob')){}
-else if(!localStorage.getItem('trotl_pwa')&&!window.matchMedia('(display-mode: standalone)').matches){setTimeout(showPWABanner,14000);}
+
 
 /* ══════════ FEATURE 7: NOTIFICATIONS ══════════ */
 const BASE_NOTIFS=[
